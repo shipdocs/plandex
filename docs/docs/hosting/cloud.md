@@ -7,6 +7,10 @@ sidebar_label: Cloud
 
 ## Overview
 
+:::info
+Plandex Cloud is winding down as of 10/3/2025 and is no longer accepting new users.
+:::
+
 Plandex Cloud is the easiest and most reliable way to use Plandex. You'll be prompted to start a trial when you launch the [REPL](../repl.md) with `plandex` or create your first plan with `plandex new`.
 
 ## Billing Modes
@@ -22,7 +26,6 @@ Plandex Cloud has two billing modes:
 - After the trial, you can upgrade to a paid plan for $45 per month—includes $20 in credits every month that never expire.
 
 [Get started with Integrated Models Mode.](https://app.plandex.ai/start?modelsMode=integrated)
-
 
 ### BYO API Key
 

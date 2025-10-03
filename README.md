@@ -16,19 +16,19 @@
   <a href="#install">
     <b>30-Second Install</b>
   </a>
-   · 
+   ·
   <a href="https://plandex.ai">
     <b>Website</b>
   </a>
-   · 
+   ·
   <a href="https://docs.plandex.ai/">
     <b>Docs</b>
   </a>
-   · 
+   ·
   <a href="#examples-">
     <b>Examples</b>
   </a>
-   · 
+   ·
   <a href="https://docs.plandex.ai/hosting/self-hosting/local-mode-quickstart">
     <b>Local Self-Hosted Mode</b>
   </a>
@@ -78,7 +78,7 @@
 
 <br/>
 
-💻  Plandex is a terminal-based AI development tool that can **plan and execute** large coding tasks that span many steps and touch dozens of files. It can handle up to 2M tokens of context directly (~100k per file), and can index directories with 20M tokens or more using tree-sitter project maps. 
+💻  Plandex is a terminal-based AI development tool that can **plan and execute** large coding tasks that span many steps and touch dozens of files. It can handle up to 2M tokens of context directly (~100k per file), and can index directories with 20M tokens or more using tree-sitter project maps.
 
 🔬  **A cumulative diff review sandbox** keeps AI-generated changes separate from your project files until they are ready to go. Command execution is controlled so you can easily roll back and debug. Plandex helps you get the most out of AI without leaving behind a mess in your project.
 
@@ -124,7 +124,6 @@
 
 - 📦 **One-line, zero dependency CLI install**. Dockerized local mode for easily self-hosting the server. Cloud-hosting options for extra reliability and convenience.
 
-
 ## Workflow  🔄
 
 <img src="images/plandex-workflow.png" alt="Plandex workflow" width="100%"/>
@@ -153,11 +152,10 @@ curl -sL https://plandex.ai/install.sh | bash
 
 ## Hosting  ⚖️
 
-| Option                                | Description                                                                                                                                                                                                                                                 |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Plandex Cloud (Integrated Models)** | • No separate accounts or API keys.<br/>• Easy multi-device usage.<br/>• Centralized billing, budgeting, usage tracking, and cost reporting.<br/>• Quickest way to [get started.](https://app.plandex.ai/start?modelsMode=integrated)                                                        |
-| **Plandex Cloud (BYO API Key)**       | • Use Plandex Cloud with your own [OpenRouter.ai](https://openrouter.ai) key (or [other model provider](https://docs.plandex.ai/models/model-providers) accounts and API keys).<br/>• [Get started](https://app.plandex.ai/start?modelsMode=byo)                                                                   |
-| **Self-hosted/Local Mode**            | • Run Plandex locally with Docker or host on your own server.<br/>• Use your own [OpenRouter.ai](https://openrouter.ai) key (or [other model provider](https://docs.plandex.ai/models/model-providers) accounts and API keys).<br/>• Follow the [local-mode quickstart](https://docs.plandex.ai/hosting/self-hosting/local-mode-quickstart) to get started. |
+| Option                     | Description                                                                                                                                                                                                                                                                                                                                                 |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Plandex Cloud**          | Winding down as of 10/3/2025 and is no longer accepting new users.                                                                                                                                                                                                                                                                                          |
+| **Self-hosted/Local Mode** | • Run Plandex locally with Docker or host on your own server.<br/>• Use your own [OpenRouter.ai](https://openrouter.ai) key (or [other model provider](https://docs.plandex.ai/models/model-providers) accounts and API keys).<br/>• Follow the [local-mode quickstart](https://docs.plandex.ai/hosting/self-hosting/local-mode-quickstart) to get started. |
 
 ## Provider keys  🔑
 
@@ -201,9 +199,9 @@ or for short:
 pdx
 ```
 
-☁️ _If you're using Plandex Cloud, you'll be prompted at this point to start a trial._
+<!-- ☁️ _If you're using Plandex Cloud, you'll be prompted at this point to start a trial._
 
-Then just give the REPL help text a quick read, and you're ready go. The REPL starts in _chat mode_ by default, which is good for fleshing out ideas before moving to implementation. Once the task is clear, Plandex will prompt you to switch to _tell mode_ to make a detailed plan and start writing code.
+Then just give the REPL help text a quick read, and you're ready go. The REPL starts in _chat mode_ by default, which is good for fleshing out ideas before moving to implementation. Once the task is clear, Plandex will prompt you to switch to _tell mode_ to make a detailed plan and start writing code. -->
 
 <br/>
 
