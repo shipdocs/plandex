@@ -19,7 +19,7 @@ Note that Windows is supported via [WSL](https://learn.microsoft.com/en-us/windo
 
 | Option                     | Description                                                                                                                                                                                                                                                                                                           |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Plandex Cloud**          | Winding down as of 10/3/2025 and is no longer accepting new users.                                                                                                                                                                                                                                                    |
+| **Plandex Cloud**          | Winding down as of 10/3/2025 and no longer accepting new users. <a href="https://plandex.ai/blog/winding-down">Learn more.</a>                                                                                                                                                                                        |
 | **Self-hosted/Local Mode** | • Run Plandex locally with Docker or host on your own server.<br/>• Use your own [OpenRouter.ai](https://openrouter.ai) key (or [other model provider](./models/model-providers.md) accounts and API keys).<br/>• Follow the [local-mode quickstart](./hosting/self-hosting/local-mode-quickstart.md) to get started. |
 
 If you're going with a 'BYO API Key' option above (whether cloud or self-hosted), decide on the model provider(s) you want to use. The quickest option is to use OpenRouter.ai, but you can also use [many other providers](./models/model-providers.md).
@@ -55,7 +55,5 @@ or for short:
 ```bash
 pdx
 ```
-
-☁️ _If you're using Plandex Cloud, you'll be prompted at this point to start a trial._
 
 Then just give the REPL help text a quick read, and you're ready go.

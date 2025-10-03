@@ -8,7 +8,7 @@ sidebar_label: Cloud
 ## Overview
 
 :::info
-Plandex Cloud is winding down as of 10/3/2025 and is no longer accepting new users.
+Plandex Cloud is winding down as of 10/3/2025 and is no longer accepting new users. <a href="https://plandex.ai/blog/winding-down">Learn more.</a>
 :::
 
 Plandex Cloud is the easiest and most reliable way to use Plandex. You'll be prompted to start a trial when you launch the [REPL](../repl.md) with `plandex` or create your first plan with `plandex new`.
