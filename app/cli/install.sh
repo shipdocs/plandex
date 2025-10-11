@@ -71,6 +71,197 @@ else
 fi
 
 
+search_api_keys () {
+  echo ""
+  echo "$(printf '%*s' "$(tput cols)" '' | tr ' ' -)"
+  echo ""
+  echo "🔍 Searching for API keys..."
+  echo ""
+  
+  # Define API keys to search for
+  declare -A api_keys=(
+    ["OPENAI_API_KEY"]="OpenAI"
+    ["ANTHROPIC_API_KEY"]="Anthropic"
+    ["GEMINI_API_KEY"]="Google AI Studio"
+    ["AZURE_OPENAI_API_KEY"]="Azure OpenAI"
+    ["DEEPSEEK_API_KEY"]="DeepSeek"
+    ["PERPLEXITY_API_KEY"]="Perplexity"
+    ["OPENROUTER_API_KEY"]="OpenRouter"
+  )
+  
+  # Files to search
+  search_files=(
+    "$HOME/.bashrc"
+    "$HOME/.bash_profile"
+    "$HOME/.zshrc"
+    "$HOME/.zshenv"
+    "$HOME/.profile"
+    "$HOME/.env"
+    "$HOME/.env.local"
+    "$(pwd)/.env"
+    "$(pwd)/.env.local"
+  )
+  
+  # Provider-specific config files
+  provider_configs=(
+    "$HOME/.claude/config"
+    "$HOME/.openai/config"
+    "$HOME/.anthropic/config"
+    "$HOME/.deepseek/config"
+    "$HOME/.perplexity/config"
+    "$HOME/.azure/config"
+    "$HOME/.gemini/config"
+    "$HOME/.openrouter/config"
+  )
+  
+  # Combine all search locations
+  all_search_files=("${search_files[@]}" "${provider_configs[@]}")
+  
+  # Arrays to track found and missing keys
+  declare -A found_keys
+  declare -A missing_keys
+  
+  # Initialize all keys as missing
+  for key in "${!api_keys[@]}"; do
+    missing_keys[$key]="${api_keys[$key]}"
+  done
+  
+  # Search in environment variables first
+  for key in "${!api_keys[@]}"; do
+    if [ -n "${!key}" ]; then
+      found_keys[$key]="${api_keys[$key]}"
+      unset missing_keys[$key]
+    fi
+  done
+  
+  # Search in files
+  for file in "${all_search_files[@]}"; do
+    if [ -f "$file" ]; then
+      for key in "${!api_keys[@]}"; do
+        if grep -q "^[[:space:]]*export[[:space:]]\+$key=" "$file" 2>/dev/null || \
+           grep -q "^[[:space:]]*$key=" "$file" 2>/dev/null; then
+          if [ -z "${found_keys[$key]}" ]; then
+            found_keys[$key]="${api_keys[$key]}"
+            unset missing_keys[$key]
+          fi
+        fi
+      done
+    fi
+  done
+  
+  # Print results
+  echo "✅ Found API keys:"
+  if [ ${#found_keys[@]} -eq 0 ]; then
+    echo "   None found"
+  else
+    for key in "${!found_keys[@]}"; do
+      echo "   ✓ $key (${found_keys[$key]})"
+    done
+  fi
+  
+  echo ""
+  echo "❌ Missing API keys:"
+  if [ ${#missing_keys[@]} -eq 0 ]; then
+    echo "   All supported providers have API keys configured!"
+  else
+    for key in "${!missing_keys[@]}"; do
+      echo "   ✗ $key (${missing_keys[$key]})"
+    done
+    
+    echo ""
+    echo "$(printf '%*s' "$(tput cols)" '' | tr ' ' -)"
+    echo ""
+    echo "📖 How to get missing API keys:"
+    echo ""
+    
+    # Provide instructions for each missing key
+    for key in "${!missing_keys[@]}"; do
+      case "$key" in
+        "OPENAI_API_KEY")
+          echo "🔹 OpenAI API Key:"
+          echo "   Visit: https://platform.openai.com/api-keys"
+          echo "   1. Sign in to your OpenAI account"
+          echo "   2. Navigate to API Keys section"
+          echo "   3. Click 'Create new secret key'"
+          echo "   4. Copy the key and add to your environment:"
+          echo "      export OPENAI_API_KEY='your-key-here'"
+          echo ""
+          ;;
+        "ANTHROPIC_API_KEY")
+          echo "🔹 Anthropic API Key:"
+          echo "   Visit: https://console.anthropic.com/settings/keys"
+          echo "   1. Sign in to your Anthropic account"
+          echo "   2. Go to API Keys settings"
+          echo "   3. Click 'Create Key'"
+          echo "   4. Copy the key and add to your environment:"
+          echo "      export ANTHROPIC_API_KEY='your-key-here'"
+          echo ""
+          ;;
+        "GEMINI_API_KEY")
+          echo "🔹 Google AI Studio API Key (Gemini):"
+          echo "   Visit: https://aistudio.google.com/app/apikey"
+          echo "   1. Sign in with your Google account"
+          echo "   2. Click 'Create API Key'"
+          echo "   3. Select or create a Google Cloud project"
+          echo "   4. Copy the key and add to your environment:"
+          echo "      export GEMINI_API_KEY='your-key-here'"
+          echo ""
+          ;;
+        "AZURE_OPENAI_API_KEY")
+          echo "🔹 Azure OpenAI API Key:"
+          echo "   Visit: https://portal.azure.com"
+          echo "   1. Sign in to Azure Portal"
+          echo "   2. Navigate to your Azure OpenAI resource"
+          echo "   3. Go to 'Keys and Endpoint' section"
+          echo "   4. Copy KEY 1 or KEY 2 and add to your environment:"
+          echo "      export AZURE_OPENAI_API_KEY='your-key-here'"
+          echo "   Note: You'll also need AZURE_API_BASE and AZURE_API_VERSION"
+          echo ""
+          ;;
+        "DEEPSEEK_API_KEY")
+          echo "🔹 DeepSeek API Key:"
+          echo "   Visit: https://platform.deepseek.com/api_keys"
+          echo "   1. Sign in to your DeepSeek account"
+          echo "   2. Navigate to API Keys section"
+          echo "   3. Click 'Create API Key'"
+          echo "   4. Copy the key and add to your environment:"
+          echo "      export DEEPSEEK_API_KEY='your-key-here'"
+          echo ""
+          ;;
+        "PERPLEXITY_API_KEY")
+          echo "🔹 Perplexity API Key:"
+          echo "   Visit: https://www.perplexity.ai/settings/api"
+          echo "   1. Sign in to your Perplexity account"
+          echo "   2. Navigate to API settings"
+          echo "   3. Generate a new API key"
+          echo "   4. Copy the key and add to your environment:"
+          echo "      export PERPLEXITY_API_KEY='your-key-here'"
+          echo ""
+          ;;
+        "OPENROUTER_API_KEY")
+          echo "🔹 OpenRouter API Key:"
+          echo "   Visit: https://openrouter.ai/keys"
+          echo "   1. Sign in to your OpenRouter account"
+          echo "   2. Navigate to Keys section"
+          echo "   3. Click 'Create Key'"
+          echo "   4. Copy the key and add to your environment:"
+          echo "      export OPENROUTER_API_KEY='your-key-here'"
+          echo ""
+          ;;
+      esac
+    done
+    
+    echo "💡 To persist your API keys, add them to your shell profile (~/.bashrc, ~/.zshrc, etc.)"
+    echo "   or create a .env file in your project directory."
+    echo ""
+    echo "📚 For more details, visit: https://docs.plandex.ai/models/model-providers"
+  fi
+  
+  echo ""
+  echo "$(printf '%*s' "$(tput cols)" '' | tr ' ' -)"
+  echo ""
+}
+
 welcome_plandex () {
   echo ""
   echo "$(printf '%*s' "$(tput cols)" '' | tr ' ' -)"
@@ -517,4 +708,7 @@ echo "👋 Join a community of AI builders 👉 https://discord.gg/plandex-ai"
 echo ""
 echo "$(printf '%*s' "$(tput cols)" '' | tr ' ' -)"
 echo ""
+
+# Search for API keys and provide guidance
+search_api_keys
 
