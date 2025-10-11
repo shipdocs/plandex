@@ -141,10 +141,18 @@
 <br/>
 
 ## Install  📥
+### Interactive Install (Recommended)
+
+Run the interactive installer, which will guide you through:
+- Choosing between cloud or local mode
+- Automatically installing Docker for local mode (Linux only)
+- Searching for existing API keys to auto-configure
 
 ```bash
 curl -sL https://plandex.ai/install.sh | bash
 ```
+
+The installer will prompt you in an interactive terminal. For non-interactive/piped installations, it will install the CLI only.
 
 **Note:** Windows is supported via [WSL](https://learn.microsoft.com/en-us/windows/wsl/install). Plandex only works correctly on Windows in the WSL shell. It doesn't work in the Windows CMD prompt or PowerShell.
 
