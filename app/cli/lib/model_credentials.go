@@ -438,20 +438,21 @@ func showCredentialErrorMessage(res CredentialCheckResult, opts shared.ModelProv
 
 	byPub := providersByPublisher(opts)
 
-	byPubWithoutOpenRouter := map[shared.ModelPublisher][]shared.ModelProvider{}
+	byPubWithoutUniversalProviders := map[shared.ModelPublisher][]shared.ModelProvider{}
 	for pub, providers := range byPub {
-		nonOrProviders := []shared.ModelProvider{}
+		nonUniversalProviders := []shared.ModelProvider{}
 		for _, provider := range providers {
-			if provider != shared.ModelProviderOpenRouter {
-				nonOrProviders = append(nonOrProviders, provider)
+			if provider != shared.ModelProviderOpenRouter && provider != shared.ModelProviderNanoGPT {
+				nonUniversalProviders = append(nonUniversalProviders, provider)
 			}
 		}
-		if len(nonOrProviders) > 0 {
-			byPubWithoutOpenRouter[pub] = nonOrProviders
+		if len(nonUniversalProviders) > 0 {
+			byPubWithoutUniversalProviders[pub] = nonUniversalProviders
 		}
 	}
 
 	allPublishersHaveOpenRouter := allPublishersHaveProvider(byPub, shared.ModelProviderOpenRouter)
+	allPublishersHaveNanoGPT := allPublishersHaveProvider(byPub, shared.ModelProviderNanoGPT)
 
 	if allPublishersHaveOpenRouter {
 		fmt.Println()
@@ -469,25 +470,40 @@ func showCredentialErrorMessage(res CredentialCheckResult, opts shared.ModelProv
 		} else {
 			step(4, "Run "+cyanChip.Sprint(" export OPENROUTER_API_KEY=… "))
 		}
+	} else if allPublishersHaveNanoGPT {
+		fmt.Println()
+		fmt.Println(color.New(term.ColorHiCyan, color.Bold).Sprint("🚀 Quick option → NanoGPT"))
+		fmt.Println("NanoGPT allows you to use all models in the current model pack with a single account and API key. To get started:")
+		fmt.Println()
+		step := func(n int, txt string) { fmt.Printf("%d. %s\n", n, txt) }
+		step(1, "Sign up at "+color.New(color.Bold).Sprint("https://nano-gpt.com"))
+		step(2, "Generate an API key in your account dashboard")
+		if term.IsRepl {
+			step(3, "Quit the REPL with "+cyanChip.Sprint(" \\quit "))
+			step(4, "Run "+cyanChip.Sprint(" export NANOGPT_API_KEY=… "))
+			step(5, "Restart the REPL with "+cyanChip.Sprint(" plandex "))
+		} else {
+			step(3, "Run "+cyanChip.Sprint(" export NANOGPT_API_KEY=… "))
+		}
 	}
 
-	if len(byPubWithoutOpenRouter) > 0 {
+	if len(byPubWithoutUniversalProviders) > 0 {
 		fmt.Println()
 		fmt.Println(color.New(term.ColorHiCyan, color.Bold).Sprint("🔑 Other model providers"))
-		if allPublishersHaveOpenRouter {
+		if allPublishersHaveOpenRouter || allPublishersHaveNanoGPT {
 			fmt.Println("You can also use the following providers for the current model pack:")
 		} else {
 			fmt.Println("You can use the following providers for the current model pack:")
 		}
 
 		fmt.Println()
-		pubs := make([]string, 0, len(byPubWithoutOpenRouter))
-		for p := range byPubWithoutOpenRouter {
+		pubs := make([]string, 0, len(byPubWithoutUniversalProviders))
+		for p := range byPubWithoutUniversalProviders {
 			pubs = append(pubs, string(p))
 		}
 		sort.Strings(pubs)
 		for _, p := range pubs {
-			providers := byPubWithoutOpenRouter[shared.ModelPublisher(p)]
+			providers := byPubWithoutUniversalProviders[shared.ModelPublisher(p)]
 			providerNames := make([]string, 0, len(providers))
 			for _, provider := range providers {
 				providerNames = append(providerNames, string(provider))

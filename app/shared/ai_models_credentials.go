@@ -62,12 +62,26 @@ func (m ModelRoleConfig) GetModelProviderOptions(settings *PlanSettings) ModelPr
 			continue
 		}
 
+		// Universal providers (OpenRouter, NanoGPT) can serve models from all publishers
+		publishers := map[ModelPublisher]bool{
+			publisher: true,
+		}
+
+		if usesProvider.Provider == ModelProviderOpenRouter || usesProvider.Provider == ModelProviderNanoGPT {
+			// These providers can serve models from all publishers
+			publishers[ModelPublisherOpenAI] = true
+			publishers[ModelPublisherAnthropic] = true
+			publishers[ModelPublisherGoogle] = true
+			publishers[ModelPublisherDeepSeek] = true
+			publishers[ModelPublisherPerplexity] = true
+			publishers[ModelPublisherQwen] = true
+			publishers[ModelPublisherMistral] = true
+		}
+
 		opts[composite] = ModelProviderOption{
-			Publishers: map[ModelPublisher]bool{
-				publisher: true,
-			},
-			Config:   &config,
-			Priority: i,
+			Publishers: publishers,
+			Config:     &config,
+			Priority:   i,
 		}
 	}
 
