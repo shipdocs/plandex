@@ -2,6 +2,7 @@ package lib
 
 import (
 	"plandex-cli/api"
+	"plandex-cli/auth"
 	"plandex-cli/term"
 
 	shared "plandex-shared"
@@ -10,6 +11,7 @@ import (
 var cachedOrgUserConfig *shared.OrgUserConfig
 
 func MustGetOrgUserConfig() *shared.OrgUserConfig {
+	auth.MustResolveAuthWithOrg()
 	if cachedOrgUserConfig != nil {
 		return cachedOrgUserConfig
 	}

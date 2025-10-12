@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"plandex-cli/api"
+	"plandex-cli/auth"
 	"plandex-cli/lib"
 	"plandex-cli/term"
 
@@ -35,8 +37,26 @@ func init() {
 }
 
 func nanoGPTStatus(cmd *cobra.Command, args []string) {
+	fmt.Println("Debug: Starting nanoGPTStatus")
+
+	auth.MustResolveAuthWithOrg()
+
+	fmt.Println("Debug: MustResolveAuthWithOrg completed")
+
+	// Debug: Check if auth is loaded
+	if auth.Current == nil {
+		term.OutputErrorAndExit("Debug: auth.Current is nil after MustResolveAuthWithOrg")
+	}
+	fmt.Printf("Debug: auth.Current.Email = %s\n", auth.Current.Email)
+	fmt.Printf("Debug: auth.Current.Host = %s\n", auth.Current.Host)
+	fmt.Printf("Debug: auth.Current.OrgId = %s\n", auth.Current.OrgId)
+
 	term.StartSpinner("")
-	orgUserConfig := lib.MustGetOrgUserConfig()
+	orgUserConfig, err := api.Client.GetOrgUserConfig()
+	if err != nil {
+		term.StopSpinner()
+		term.OutputErrorAndExit("Error getting org user config: %v", err)
+	}
 	term.StopSpinner()
 
 	fmt.Println()
@@ -58,6 +78,8 @@ func nanoGPTStatus(cmd *cobra.Command, args []string) {
 }
 
 func connectNanoGPT(cmd *cobra.Command, args []string) {
+	auth.MustResolveAuthWithOrg()
+
 	term.StartSpinner("")
 	orgUserConfig := lib.MustGetOrgUserConfig()
 	
@@ -82,6 +104,8 @@ func connectNanoGPT(cmd *cobra.Command, args []string) {
 }
 
 func disconnectNanoGPT(cmd *cobra.Command, args []string) {
+	auth.MustResolveAuthWithOrg()
+
 	term.StartSpinner("")
 	orgUserConfig := lib.MustGetOrgUserConfig()
 	
