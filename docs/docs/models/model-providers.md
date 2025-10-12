@@ -56,6 +56,20 @@ You can also use OpenRouter alongside other providers. For example, if you set b
 
 If you set a `OPENROUTER_API_KEY` and are also using other providers, Plandex will also **fail over** to OpenRouter if another provider has an error. This offers a strong layer of redundancy since OpenRouter itself routes model calls across a number of different upstream providers.
 
+### NanoGPT
+
+[NanoGPT](https://nano-gpt.com) is another unified provider that offers access to multiple AI models through a single API key and OpenAI-compatible endpoints. Like OpenRouter, it provides access to models from OpenAI, Anthropic, Google, and other providers.
+
+To use NanoGPT, you'll need to create an account and generate an API key, then set the `NANOGPT_API_KEY` environment variable.
+
+```bash
+export NANOGPT_API_KEY=...
+
+plandex # start the Plandex REPL
+```
+
+NanoGPT can be used alongside other providers for redundancy and failover, similar to OpenRouter. If you have both `NANOGPT_API_KEY` and direct provider keys set, Plandex will prefer the direct providers but can fall back to NanoGPT if needed.
+
 ### OpenAI
 
 You can optionally set an `OPENAI_API_KEY` to use the OpenAI API directly with your own OpenAI account when calling OpenAI models.
