@@ -67,7 +67,7 @@ func (m ModelRoleConfig) GetModelProviderOptions(settings *PlanSettings) ModelPr
 			publisher: true,
 		}
 
-		if usesProvider.Provider == ModelProviderOpenRouter || usesProvider.Provider == ModelProviderNanoGPT {
+		if usesProvider.Provider == ModelProviderOpenRouter || usesProvider.Provider == ModelProviderNanoGPT || usesProvider.Provider == ModelProviderNanoGPTSubscription {
 			// These providers can serve models from all publishers
 			publishers[ModelPublisherOpenAI] = true
 			publishers[ModelPublisherAnthropic] = true

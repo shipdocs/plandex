@@ -15,6 +15,7 @@ type OrgUserConfig struct {
 	PromptedClaudeMax                   bool      `json:"promptedClaudeMax"`
 	UseClaudeSubscription               bool      `json:"useClaudeSubscription"`
 	ClaudeSubscriptionCooldownStartedAt time.Time `json:"claudeSubscriptionCooldownStartedAt"`
+	UseNanoGPTSubscription              bool      `json:"useNanoGPTSubscription"`
 }
 
 func (p *OrgUserConfig) IsClaudeSubscriptionCooldownActive() bool {

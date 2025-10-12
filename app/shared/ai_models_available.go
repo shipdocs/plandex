@@ -68,6 +68,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderAzureOpenAI, ModelName: "azure/o3"},
 			{Provider: ModelProviderOpenRouter, ModelName: "openai/o3"},
 			{Provider: ModelProviderNanoGPT, ModelName: "o3"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "o3"},
 		},
 	},
 	{
@@ -92,6 +93,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderAzureOpenAI, ModelName: "azure/o4-mini"},
 			{Provider: ModelProviderOpenRouter, ModelName: "openai/o4-mini"},
 			{Provider: ModelProviderNanoGPT, ModelName: "o4-mini"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "o4-mini"},
 		},
 	},
 	{
@@ -108,6 +110,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderAzureOpenAI, ModelName: "azure/gpt-4.1"},
 			{Provider: ModelProviderOpenRouter, ModelName: "openai/gpt-4.1"},
 			{Provider: ModelProviderNanoGPT, ModelName: "gpt-4.1"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "gpt-4.1"},
 		},
 	},
 	{
@@ -124,6 +127,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderAzureOpenAI, ModelName: "azure/gpt-4.1-mini"},
 			{Provider: ModelProviderOpenRouter, ModelName: "openai/gpt-4.1-mini"},
 			{Provider: ModelProviderNanoGPT, ModelName: "gpt-4.1-mini"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "gpt-4.1-mini"},
 		},
 	},
 	{
@@ -140,6 +144,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderAzureOpenAI, ModelName: "azure/gpt-4.1-nano"},
 			{Provider: ModelProviderOpenRouter, ModelName: "openai/gpt-4.1-nano"},
 			{Provider: ModelProviderNanoGPT, ModelName: "gpt-4.1-nano"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "gpt-4.1-nano"},
 		},
 	},
 	{
@@ -198,6 +203,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderGoogleVertex, ModelName: "vertex_ai/claude-sonnet-4@20250514"},
 			{Provider: ModelProviderOpenRouter, ModelName: "anthropic/claude-sonnet-4"},
 			{Provider: ModelProviderNanoGPT, ModelName: "claude-sonnet-4-5-20250929"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "claude-sonnet-4-5-20250929"},
 		},
 	},
 	{
@@ -244,6 +250,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderAmazonBedrock, ModelName: "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"},
 			{Provider: ModelProviderOpenRouter, ModelName: "anthropic/claude-3.5-sonnet"},
 			{Provider: ModelProviderNanoGPT, ModelName: "claude-3-5-sonnet-20241022"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "claude-3-5-sonnet-20241022"},
 		},
 	},
 	{
@@ -262,6 +269,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderAmazonBedrock, ModelName: "bedrock/anthropic.claude-3-5-haiku-20241022-v1:0"},
 			{Provider: ModelProviderOpenRouter, ModelName: "anthropic/claude-3.5-haiku"},
 			{Provider: ModelProviderNanoGPT, ModelName: "claude-3-5-haiku-20241022"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "claude-3-5-haiku-20241022"},
 		},
 	},
 	{
@@ -278,6 +286,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderGoogleVertex, ModelName: "vertex_ai/gemini-1.5-pro"},
 			{Provider: ModelProviderOpenRouter, ModelName: "google/gemini-pro-1.5"},
 			{Provider: ModelProviderNanoGPT, ModelName: "gemini-1.5-pro"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "gemini-1.5-pro"},
 		},
 	},
 	{
@@ -294,6 +303,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderGoogleVertex, ModelName: "vertex_ai/gemini-2.5-pro"},
 			{Provider: ModelProviderOpenRouter, ModelName: "google/gemini-2.5-pro"},
 			{Provider: ModelProviderNanoGPT, ModelName: "gemini-2.5-pro"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "gemini-2.5-pro"},
 		},
 	},
 	{
@@ -322,6 +332,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderGoogleVertex, ModelName: "vertex_ai/gemini-2.5-flash"},
 			{Provider: ModelProviderOpenRouter, ModelName: "google/gemini-2.5-flash"},
 			{Provider: ModelProviderNanoGPT, ModelName: "gemini-2.5-flash"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "gemini-2.5-flash"},
 		},
 	},
 	{
@@ -337,6 +348,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderDeepSeek, ModelName: "deepseek/deepseek-chat"},
 			{Provider: ModelProviderOpenRouter, ModelName: "deepseek/deepseek-chat-v3"},
 			{Provider: ModelProviderNanoGPT, ModelName: "deepseek-chat"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "deepseek-chat"},
 		},
 	},
 	{
@@ -356,6 +368,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderDeepSeek, ModelName: "deepseek/deepseek-reasoner"},
 			{Provider: ModelProviderOpenRouter, ModelName: "deepseek/deepseek-r1-0528"},
 			{Provider: ModelProviderNanoGPT, ModelName: "deepseek-r1"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "deepseek-r1"},
 		},
 	},
 	{

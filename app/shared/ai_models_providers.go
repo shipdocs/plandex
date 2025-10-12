@@ -7,6 +7,7 @@ import (
 const OpenAIV1BaseUrl = "https://api.openai.com/v1"
 const OpenRouterBaseUrl = "https://openrouter.ai/api/v1"
 const NanoGPTBaseUrl = "https://nano-gpt.com/api/v1"
+const NanoGPTSubscriptionBaseUrl = "https://nano-gpt.com/api/subscription/v1"
 const LiteLLMBaseUrl = "http://localhost:4000/v1" // runs in the same container alongside the plandex server
 
 const OpenAIEnvVar = "OPENAI_API_KEY"
@@ -49,6 +50,7 @@ const (
 	ModelProviderDeepSeek           ModelProvider = "deepseek"
 	ModelProviderPerplexity         ModelProvider = "perplexity"
 	ModelProviderNanoGPT            ModelProvider = "nanogpt"
+	ModelProviderNanoGPTSubscription ModelProvider = "nanogpt-subscription"
 
 	ModelProviderAmazonBedrock ModelProvider = "aws-bedrock"
 
@@ -205,6 +207,11 @@ var BuiltInModelProviderConfigs = map[ModelProvider]ModelProviderConfigSchema{
 		BaseUrl:      NanoGPTBaseUrl,
 		ApiKeyEnvVar: NanoGPTApiKeyEnvVar,
 	},
+	ModelProviderNanoGPTSubscription: {
+		Provider:     ModelProviderNanoGPTSubscription,
+		BaseUrl:      NanoGPTSubscriptionBaseUrl,
+		ApiKeyEnvVar: NanoGPTApiKeyEnvVar,
+	},
 	ModelProviderAmazonBedrock: {
 		Provider:   ModelProviderAmazonBedrock,
 		BaseUrl:    LiteLLMBaseUrl,
@@ -334,6 +341,33 @@ func GetProvidersForAuthVarsWithModelId(authVars map[string]string, settings *Pl
 		// if the model pack has a local provider, the provider is local only, and the provider is not the local provider, skip it
 		if localProvider != "" && provider.LocalOnly && provider.Provider != localProvider {
 			continue
+		}
+
+		// Handle NanoGPT subscription preference
+		if orgUserConfig != nil {
+			// If user prefers subscription, skip regular NanoGPT provider when subscription is available
+			if orgUserConfig.UseNanoGPTSubscription && provider.Provider == ModelProviderNanoGPT {
+				// Check if subscription provider is available for this model
+				hasSubscriptionProvider := false
+				for _, checkProvider := range usesProviders {
+					if checkProvider.Provider == ModelProviderNanoGPTSubscription {
+						hasSubscriptionProvider = true
+						break
+					}
+				}
+				if hasSubscriptionProvider {
+					continue // Skip regular NanoGPT in favor of subscription
+				}
+			}
+			// If user doesn't prefer subscription, skip subscription provider
+			if !orgUserConfig.UseNanoGPTSubscription && provider.Provider == ModelProviderNanoGPTSubscription {
+				continue
+			}
+		} else {
+			// If no user config, default to regular NanoGPT (skip subscription)
+			if provider.Provider == ModelProviderNanoGPTSubscription {
+				continue
+			}
 		}
 
 		res = append(res, provider)
