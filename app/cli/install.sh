@@ -868,10 +868,14 @@ welcome_plandex
 check_existing_installation
 download_plandex
 
-# Prompt for setup type if running interactively
-if [ -t 0 ]; then
+# Prompt for setup type if running in a terminal (even if stdin is piped)
+if [ -t 1 ] && [ -t 2 ]; then
+  # We have a terminal for output, so we can be interactive
+  # Redirect input from the terminal to handle piped input
+  exec < /dev/tty
+
   prompt_setup_type
-  
+
   case $SETUP_TYPE in
     local)
       setup_local_mode
@@ -892,7 +896,7 @@ if [ -t 0 ]; then
       ;;
   esac
 else
-  # Non-interactive installation (e.g., piped from curl)
+  # Non-interactive installation (no terminal available)
   SETUP_TYPE="cli-only"
 fi
 
@@ -913,9 +917,9 @@ echo "$(printf '%*s' "$(tput cols)" '' | tr ' ' -)"
 echo ""
 
 # Only provide API key guidance in interactive mode, after other setup is complete
-if [ -t 0 ]; then
+if [ -t 1 ] && [ -t 2 ]; then
   # Only show guidance if no provider was configured
-  if [ -z "$OPENROUTER_API_KEY" ] && [ -z "$OPENAI_API_KEY" ] && [ -z "$ANTHROPIC_API_KEY" ]; then
+  if [ -z "$OPENROUTER_API_KEY" ] && [ -z "$OPENAI_API_KEY" ] && [ -z "$ANTHROPIC_API_KEY" ] && [ -z "$NANOGPT_API_KEY" ]; then
     provide_api_key_guidance
   fi
 fi
