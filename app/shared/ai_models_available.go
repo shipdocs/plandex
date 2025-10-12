@@ -67,6 +67,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderOpenAI, ModelName: "o3"},
 			{Provider: ModelProviderAzureOpenAI, ModelName: "azure/o3"},
 			{Provider: ModelProviderOpenRouter, ModelName: "openai/o3"},
+			{Provider: ModelProviderNanoGPT, ModelName: "o3"},
 		},
 	},
 	{
@@ -90,6 +91,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderOpenAI, ModelName: "o4-mini"},
 			{Provider: ModelProviderAzureOpenAI, ModelName: "azure/o4-mini"},
 			{Provider: ModelProviderOpenRouter, ModelName: "openai/o4-mini"},
+			{Provider: ModelProviderNanoGPT, ModelName: "o4-mini"},
 		},
 	},
 	{
@@ -258,6 +260,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderGoogleVertex, ModelName: "vertex_ai/claude-3-5-haiku@20241022"},
 			{Provider: ModelProviderAmazonBedrock, ModelName: "bedrock/anthropic.claude-3-5-haiku-20241022-v1:0"},
 			{Provider: ModelProviderOpenRouter, ModelName: "anthropic/claude-3.5-haiku"},
+			{Provider: ModelProviderNanoGPT, ModelName: "claude-3-5-haiku-20241022"},
 		},
 	},
 	{
