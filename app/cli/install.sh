@@ -7,7 +7,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PLATFORM=
 ARCH=
 VERSION=
-RELEASES_URL="https://github.com/plandex-ai/plandex/releases/download"
+RELEASES_URL="https://github.com/shipdocs/plandex/releases/download"
 SETUP_TYPE=
 
  # Ensure cleanup happens on exit and on specific signals
@@ -613,7 +613,7 @@ setup_local_mode () {
   echo "📋 Local mode setup instructions:"
   echo ""
   echo "   1. Clone the Plandex repository:"
-  echo "      git clone https://github.com/plandex-ai/plandex.git"
+  echo "      git clone https://github.com/shipdocs/plandex.git"
   echo ""
   echo "   2. Start the local server:"
   echo "      cd plandex/app && ./start_local.sh"
@@ -642,7 +642,7 @@ setup_local_mode () {
     fi
     
     if [ ! -d "$install_dir" ]; then
-      git clone https://github.com/plandex-ai/plandex.git "$install_dir"
+      git clone https://github.com/shipdocs/plandex.git "$install_dir"
     fi
     
     echo ""

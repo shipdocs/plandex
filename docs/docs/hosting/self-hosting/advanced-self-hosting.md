@@ -82,7 +82,7 @@ export API_HOST=api.your-domain.ai
 The server can be run from a Dockerfile at `app/Dockerfile.server`:
 
 ```bash
-git clone https://github.com/plandex-ai/plandex.git
+git clone https://github.com/shipdocs/plandex.git
 VERSION=$(cat app/server/version.txt) # or use the version you want
 git checkout server/v$VERSION
 cd plandex/app
@@ -117,7 +117,7 @@ docker pull plandexai/plandex-server:latest
 You can also run the server from source:
 
 ```bash
-git clone https://github.com/plandex-ai/plandex.git
+git clone https://github.com/shipdocs/plandex.git
 cd plandex/
 VERSION=$(cat app/server/version.txt) # or use the version you want
 git checkout server/v$VERSION
