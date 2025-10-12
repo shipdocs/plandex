@@ -38,8 +38,8 @@ func checkForUpgrade() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Use GitHub releases API to get latest CLI version
-	latestVersionURL := "https://api.github.com/repos/shipdocs/plandex/releases"
+	// Use GitHub tags API to get latest CLI version
+	latestVersionURL := "https://api.github.com/repos/shipdocs/plandex/tags"
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, latestVersionURL, nil)
 	if err != nil {
 		log.Println("Error creating request:", err)
@@ -62,11 +62,11 @@ func checkForUpgrade() {
 	bodyStr := string(body)
 	versionStr := ""
 
-	// Look for CLI version tags in the format "cli/v2.2.3"
+	// Look for CLI version tags in the format "cli/v2.2.4"
 	lines := strings.Split(bodyStr, "\n")
 	for _, line := range lines {
-		if strings.Contains(line, `"tag_name"`) && strings.Contains(line, `"cli/v`) {
-			// Extract version from: "tag_name": "cli/v2.2.3",
+		if strings.Contains(line, `"name"`) && strings.Contains(line, `"cli/v`) {
+			// Extract version from: "name": "cli/v2.2.4",
 			start := strings.Index(line, `"cli/v`) + 6
 			end := strings.Index(line[start:], `"`)
 			if start > 5 && end > 0 {
