@@ -779,9 +779,22 @@ setup_local_mode () {
   local install_dir="$HOME/plandex-server"
   if [ -d "$install_dir" ]; then
     echo "⚠️  Directory $install_dir already exists."
-    read -p "Use existing directory? [y/N]: " use_existing </dev/tty
-    if [[ ! "$use_existing" =~ ^[Yy]$ ]]; then
+    read -p "Update existing installation? [Y/n]: " update_existing </dev/tty
+    if [[ ! "$update_existing" =~ ^[Nn]$ ]]; then
+      echo "🔄 Updating existing Plandex server..."
+      cd "$install_dir"
+      if [ -d ".git" ]; then
+        echo "📥 Pulling latest changes..."
+        git fetch origin
+        git reset --hard origin/main
+        echo "✅ Server code updated to latest version"
+      else
+        echo "⚠️  Existing directory is not a git repository. Please remove it and try again."
+        return 1
+      fi
+    else
       read -p "Enter a different directory path: " install_dir </dev/tty
+      install_dir="${install_dir/#\~/$HOME}"
     fi
   fi
 
@@ -869,9 +882,81 @@ setup_local_mode () {
   fi
 }
 
+update_local_server () {
+  echo ""
+  echo "🔄 Checking for local Plandex server updates..."
+
+  local install_dir="$HOME/plandex-server"
+
+  if [ ! -d "$install_dir" ]; then
+    echo "ℹ️  No local server installation found at $install_dir"
+    echo "   Run this installer to set up local mode."
+    return 0
+  fi
+
+  if [ ! -d "$install_dir/.git" ]; then
+    echo "⚠️  Local server directory is not a git repository."
+    echo "   Cannot update automatically. Please reinstall using this installer."
+    return 1
+  fi
+
+  cd "$install_dir"
+
+  # Check if there are updates available
+  echo "📥 Checking for server updates..."
+  git fetch origin >/dev/null 2>&1
+
+  local current_commit=$(git rev-parse HEAD)
+  local latest_commit=$(git rev-parse origin/main)
+
+  if [ "$current_commit" = "$latest_commit" ]; then
+    echo "✅ Local server is already up to date"
+    return 0
+  fi
+
+  echo "🔄 Updating local server to latest version..."
+  git reset --hard origin/main
+
+  # Check if Docker containers are running
+  if docker compose ps -q >/dev/null 2>&1; then
+    echo "🐳 Rebuilding and restarting Docker containers..."
+    cd "$install_dir/app"
+    docker compose down
+    docker compose build plandex-server >/dev/null 2>&1
+    docker compose up -d
+
+    echo "⏳ Waiting for server to be ready..."
+    local max_wait=60
+    local wait_time=0
+
+    while [ $wait_time -lt $max_wait ]; do
+      if curl -s http://localhost:8099/health >/dev/null 2>&1; then
+        break
+      fi
+      sleep 2
+      wait_time=$((wait_time + 2))
+    done
+
+    if [ $wait_time -ge $max_wait ]; then
+      echo "⚠️  Server is taking longer than expected to restart."
+      echo "   Check status with: docker ps"
+    else
+      echo "✅ Local server updated and restarted successfully!"
+    fi
+  else
+    echo "✅ Local server code updated. Restart with:"
+    echo "   cd $install_dir/app && docker compose up -d"
+  fi
+
+  echo ""
+}
+
 welcome_plandex
 check_existing_installation
 download_plandex
+
+# Update local server if it exists (for upgrades)
+update_local_server
 
 # Prompt for setup type if running in a terminal (even if stdin is piped)
 if [ -t 1 ] && [ -t 2 ]; then

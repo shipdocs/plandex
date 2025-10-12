@@ -110,6 +110,10 @@ func checkForUpgrade() {
 				term.OutputErrorAndExit("Failed to upgrade: %v", err)
 				return
 			}
+
+			// Also update local server if it exists
+			updateLocalServer()
+
 			term.StopSpinner()
 			restartPlandex()
 		} else {
@@ -178,6 +182,127 @@ func doUpgrade(version string) error {
 	}
 
 	return nil
+}
+
+func updateLocalServer() {
+	// Check if local server directory exists
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		log.Println("Could not determine home directory:", err)
+		return
+	}
+
+	serverDir := fmt.Sprintf("%s/plandex-server", homeDir)
+	if _, err := os.Stat(serverDir); os.IsNotExist(err) {
+		// No local server installation found
+		return
+	}
+
+	// Check if it's a git repository
+	gitDir := fmt.Sprintf("%s/.git", serverDir)
+	if _, err := os.Stat(gitDir); os.IsNotExist(err) {
+		log.Println("Local server directory is not a git repository, skipping update")
+		return
+	}
+
+	fmt.Println("🔄 Updating local Plandex server...")
+
+	// Change to server directory
+	originalDir, err := os.Getwd()
+	if err != nil {
+		log.Println("Could not get current directory:", err)
+		return
+	}
+	defer os.Chdir(originalDir)
+
+	err = os.Chdir(serverDir)
+	if err != nil {
+		log.Println("Could not change to server directory:", err)
+		return
+	}
+
+	// Fetch latest changes
+	cmd := exec.Command("git", "fetch", "origin")
+	cmd.Stdout = nil
+	cmd.Stderr = nil
+	err = cmd.Run()
+	if err != nil {
+		log.Println("Could not fetch latest changes:", err)
+		return
+	}
+
+	// Check if update is needed
+	currentCmd := exec.Command("git", "rev-parse", "HEAD")
+	currentOut, err := currentCmd.Output()
+	if err != nil {
+		log.Println("Could not get current commit:", err)
+		return
+	}
+
+	latestCmd := exec.Command("git", "rev-parse", "origin/main")
+	latestOut, err := latestCmd.Output()
+	if err != nil {
+		log.Println("Could not get latest commit:", err)
+		return
+	}
+
+	currentCommit := strings.TrimSpace(string(currentOut))
+	latestCommit := strings.TrimSpace(string(latestOut))
+
+	if currentCommit == latestCommit {
+		fmt.Println("✅ Local server is already up to date")
+		return
+	}
+
+	// Update to latest
+	resetCmd := exec.Command("git", "reset", "--hard", "origin/main")
+	resetCmd.Stdout = nil
+	resetCmd.Stderr = nil
+	err = resetCmd.Run()
+	if err != nil {
+		log.Println("Could not update server code:", err)
+		return
+	}
+
+	// Check if Docker containers are running and restart them
+	appDir := fmt.Sprintf("%s/app", serverDir)
+	err = os.Chdir(appDir)
+	if err != nil {
+		log.Println("Could not change to app directory:", err)
+		return
+	}
+
+	// Check if containers are running
+	psCmd := exec.Command("docker", "compose", "ps", "-q")
+	psOut, err := psCmd.Output()
+	if err == nil && len(strings.TrimSpace(string(psOut))) > 0 {
+		fmt.Println("🐳 Restarting Docker containers...")
+
+		// Stop containers
+		downCmd := exec.Command("docker", "compose", "down")
+		downCmd.Stdout = nil
+		downCmd.Stderr = nil
+		downCmd.Run()
+
+		// Rebuild and start
+		buildCmd := exec.Command("docker", "compose", "build", "plandex-server")
+		buildCmd.Stdout = nil
+		buildCmd.Stderr = nil
+		buildCmd.Run()
+
+		upCmd := exec.Command("docker", "compose", "up", "-d")
+		upCmd.Stdout = nil
+		upCmd.Stderr = nil
+		err = upCmd.Run()
+		if err != nil {
+			log.Println("Could not restart containers:", err)
+			return
+		}
+
+		fmt.Println("✅ Local server updated and restarted")
+	} else {
+		fmt.Println("✅ Local server code updated")
+	}
 }
 
 func restartPlandex() {

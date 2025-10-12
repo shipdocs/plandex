@@ -5,7 +5,7 @@
 
 set -e
 
-VERSION="2.2.1"
+VERSION="2.2.6"
 BUILD_DIR="build"
 RELEASE_DIR="release"
 
