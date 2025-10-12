@@ -355,6 +355,7 @@ func (state *activeTellStreamState) loadTellPlan() error {
 	state.summaries = summaries
 	state.latestSummaryTokens = latestSummaryTokens
 	state.settings = settings
+	state.orgUserConfig = orgUserConfig
 	state.currentPlanState = currentPlan
 	state.subtasks = subtasks
 
