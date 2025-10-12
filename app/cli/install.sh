@@ -765,60 +765,101 @@ setup_local_mode () {
   
   # Ask if user wants to configure a provider
   configure_provider
-  
-  # Ask if user wants to start the server now
+
+  # Automatically set up local server
   echo ""
-  echo "📋 Local mode setup instructions:"
+  echo "📦 Setting up local Plandex server..."
   echo ""
-  echo "   1. Clone the Plandex repository:"
-  echo "      git clone https://github.com/shipdocs/plandex.git"
+
+  local install_dir="$HOME/plandex-server"
+  if [ -d "$install_dir" ]; then
+    echo "⚠️  Directory $install_dir already exists."
+    read -p "Use existing directory? [y/N]: " use_existing </dev/tty
+    if [[ ! "$use_existing" =~ ^[Yy]$ ]]; then
+      read -p "Enter a different directory path: " install_dir </dev/tty
+    fi
+  fi
+
+  if [ ! -d "$install_dir" ]; then
+    echo "📥 Cloning Plandex repository..."
+    git clone https://github.com/shipdocs/plandex.git "$install_dir"
+  fi
+
   echo ""
-  echo "   2. Start the local server:"
-  echo "      cd plandex/app && ./start_local.sh"
+  echo "🚀 Starting Plandex server..."
+  echo "   This may take a minute to download and start Docker containers..."
   echo ""
-  echo "   3. In a new terminal, sign in to your local server:"
-  echo "      plandex sign-in"
+
+  cd "$install_dir/app"
+
+  # Start the server in detached mode
+  echo "📥 Pulling latest Docker images..."
+  docker compose pull plandex-server > /dev/null 2>&1
+
+  echo "🔄 Starting containers..."
+  docker compose up -d
+
+  echo "⏳ Waiting for server to be ready..."
+  local max_wait=120
+  local wait_time=0
+
+  while [ $wait_time -lt $max_wait ]; do
+    if curl -s http://localhost:8099 > /dev/null 2>&1; then
+      echo ""
+      echo "✅ Server is ready!"
+      break
+    fi
+    sleep 3
+    wait_time=$((wait_time + 3))
+    printf "."
+  done
+
   echo ""
-  echo "   4. When prompted, select 'Local mode host' and confirm http://localhost:8099"
-  echo ""
-  echo "📚 Full documentation: https://docs.plandex.ai/hosting/self-hosting/local-mode-quickstart"
-  echo ""
-  
-  read -p "Would you like to clone and start the server now? [y/N]: " start_server_choice </dev/tty
-  
-  if [[ "$start_server_choice" =~ ^[Yy]$ ]]; then
+
+  if [ $wait_time -ge $max_wait ]; then
+    echo "⚠️  Server is taking longer than expected to start."
+    echo "   You can check the status with: docker ps"
+    echo "   Once ready, run: plandex sign-in"
     echo ""
-    echo "📦 Cloning Plandex repository..."
-    
-    local install_dir="$HOME/plandex-server"
-    if [ -d "$install_dir" ]; then
-      echo "⚠️  Directory $install_dir already exists."
-      read -p "Use existing directory? [y/N]: " use_existing </dev/tty
-      if [[ ! "$use_existing" =~ ^[Yy]$ ]]; then
-        read -p "Enter a different directory path: " install_dir </dev/tty
+  else
+    echo ""
+    echo "🎉 Local mode setup complete!"
+    echo ""
+    echo "   Your Plandex server is running at: http://localhost:8099"
+    echo ""
+    echo "   To stop the server later, run:"
+    echo "   cd $install_dir/app && docker compose down"
+    echo ""
+    echo "   To restart the server, run:"
+    echo "   cd $install_dir/app && docker compose up -d"
+    echo ""
+
+    # Offer to automatically sign in
+    echo "🔐 Would you like to sign in to your local Plandex server now?"
+    read -p "Sign in automatically? [Y/n]: " auto_signin </dev/tty
+    echo ""
+
+    if [[ ! "$auto_signin" =~ ^[Nn]$ ]]; then
+      echo "🚀 Starting Plandex sign-in process..."
+      echo ""
+      echo "   When prompted:"
+      echo "   1. Select 'Local mode host'"
+      echo "   2. Confirm the default host: http://localhost:8099"
+      echo ""
+
+      # Run plandex sign-in
+      if command -v plandex >/dev/null 2>&1; then
+        plandex sign-in
+        echo ""
+        echo "✅ You're all set! You can now run 'plandex' in any project directory."
+      else
+        echo "⚠️  Plandex CLI not found in PATH. You may need to restart your terminal."
+        echo "   Then run: plandex sign-in"
       fi
+    else
+      echo "   You can sign in later by running: plandex sign-in"
+      echo "   When prompted, select 'Local mode host' and confirm http://localhost:8099"
     fi
-    
-    if [ ! -d "$install_dir" ]; then
-      git clone https://github.com/shipdocs/plandex.git "$install_dir"
-    fi
-    
-    echo ""
-    echo "🚀 Starting Plandex server..."
-    echo "   The server will run in the background."
-    echo "   To stop it later, run: cd $install_dir/app && docker compose down"
-    echo ""
-    
-    cd "$install_dir/app"
-    ./start_local.sh &
-    
-    echo ""
-    echo "✅ Server is starting! Give it a few seconds to initialize."
-    echo ""
-    echo "   Next steps:"
-    echo "   1. Wait for server startup (check with: docker ps)"
-    echo "   2. Run: plandex sign-in"
-    echo "   3. Select 'Local mode host' when prompted"
     echo ""
   fi
 }
