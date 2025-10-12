@@ -14,7 +14,7 @@ The quickstart requires git, docker, and docker-compose. It's designed for local
 1. Run the server in local mode: 
 
 ```bash
-git clone https://github.com/plandex-ai/plandex.git
+git clone https://github.com/shipdocs/plandex.git
 cd plandex/app
 ./start_local.sh
 ```
