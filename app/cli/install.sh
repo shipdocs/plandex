@@ -71,7 +71,7 @@ else
 fi
 
 
-search_api_keys () {
+provide_api_key_guidance () {
   echo ""
   echo "$(printf '%*s' "$(tput cols)" '' | tr ' ' -)"
   echo ""
@@ -389,7 +389,7 @@ prompt_setup_type () {
   echo "  2) Local Mode (self-hosted on your machine)"
   echo "  3) Just install the CLI (configure later)"
   echo ""
-  read -p "Enter your choice [1-3]: " setup_choice
+  read -p "Enter your choice [1-3]: " setup_choice </dev/tty
   echo ""
   
   case $setup_choice in
@@ -431,7 +431,7 @@ install_docker () {
   echo ""
   echo "Docker is not installed. Docker is required for local mode."
   echo ""
-  read -p "Would you like to install Docker now? [y/N]: " install_docker_choice
+  read -p "Would you like to install Docker now? [y/N]: " install_docker_choice </dev/tty
   
   if [[ ! "$install_docker_choice" =~ ^[Yy]$ ]]; then
     echo "❌ Docker installation skipped. You'll need to install Docker manually to use local mode."
@@ -490,46 +490,136 @@ install_docker () {
   fi
 }
 
-search_api_keys () {
+configure_provider () {
   echo ""
-  echo "🔑 Would you like to search your system for existing API keys?"
-  echo "   This will search common locations for API keys from providers like:"
-  echo "   - OpenRouter, OpenAI, Anthropic, Google, Azure, DeepSeek, Perplexity"
+  echo "🔑 Would you like to configure a model provider now?"
   echo ""
-  read -p "Search for API keys? [y/N]: " search_choice
+  echo "   Plandex supports multiple AI model providers. You can choose from:"
+  echo ""
+  echo "   1) OpenRouter (Recommended - single API key for 200+ models)"
+  echo "      • Access models from OpenAI, Anthropic, Google, Meta, and more"
+  echo "      • Simple unified billing and usage tracking"
+  echo "      • Get started: https://openrouter.ai"
+  echo ""
+  echo "   2) Individual providers (OpenAI, Anthropic, Google, etc.)"
+  echo "      • Configure specific providers you already have accounts with"
+  echo "      • Requires separate API keys for each provider"
+  echo ""
+  echo "   3) Skip for now (configure manually later)"
+  echo ""
+  read -p "Enter your choice [1-3]: " provider_choice </dev/tty
+  echo ""
   
-  if [[ ! "$search_choice" =~ ^[Yy]$ ]]; then
-    echo "⏭️  API key search skipped."
+  case $provider_choice in
+    1)
+      setup_openrouter
+      ;;
+    2)
+      setup_individual_providers
+      ;;
+    3)
+      echo "⏭️  Provider configuration skipped."
+      echo ""
+      echo "💡 You can configure providers later by setting environment variables."
+      echo "   See: https://docs.plandex.ai/models/model-providers"
+      ;;
+    *)
+      echo "❌ Invalid choice. Skipping provider configuration."
+      echo ""
+      echo "💡 You can configure providers later by setting environment variables."
+      echo "   See: https://docs.plandex.ai/models/model-providers"
+      ;;
+  esac
+}
+
+setup_openrouter () {
+  echo "🌐 Setting up OpenRouter"
+  echo ""
+  echo "   OpenRouter provides access to 200+ AI models through a single API key."
+  echo "   This includes models from:"
+  echo "   • OpenAI (GPT-4, o1, o3, etc.)"
+  echo "   • Anthropic (Claude Sonnet, Opus, etc.)"
+  echo "   • Google (Gemini models)"
+  echo "   • Meta (Llama models)"
+  echo "   • DeepSeek, Qwen, Mistral, and many more"
+  echo ""
+  echo "   👉 Visit https://openrouter.ai to create a free account"
+  echo "   👉 Get your API key from https://openrouter.ai/keys"
+  echo ""
+  
+  # Check if OpenRouter key already exists
+  if [ -n "$OPENROUTER_API_KEY" ]; then
+    echo "✅ Found existing OPENROUTER_API_KEY in your environment"
+    echo ""
+    read -p "Would you like to update it? [y/N]: " update_choice </dev/tty
+    if [[ ! "$update_choice" =~ ^[Yy]$ ]]; then
+      echo "✅ Using existing OpenRouter API key"
+      return
+    fi
+  fi
+  
+  read -p "Do you have an OpenRouter API key to configure now? [y/N]: " has_key </dev/tty
+  
+  if [[ ! "$has_key" =~ ^[Yy]$ ]]; then
+    echo ""
+    echo "ℹ️  No problem! You can configure OpenRouter later by setting:"
+    echo "   export OPENROUTER_API_KEY='your-key-here'"
+    echo ""
     return
   fi
   
   echo ""
-  echo "🔍 Searching for API keys in common locations..."
+  read -p "Enter your OpenRouter API key: " api_key </dev/tty
+  echo ""
+  
+  if [ -z "$api_key" ]; then
+    echo "❌ No API key provided. Skipping configuration."
+    return
+  fi
+  
+  # Determine which shell profile to use
+  local shell_profile=""
+  if [ -n "$BASH_VERSION" ]; then
+    if [ -f "$HOME/.bashrc" ]; then
+      shell_profile="$HOME/.bashrc"
+    elif [ -f "$HOME/.bash_profile" ]; then
+      shell_profile="$HOME/.bash_profile"
+    fi
+  elif [ -n "$ZSH_VERSION" ]; then
+    shell_profile="$HOME/.zshrc"
+  fi
+  
+  # Fallback to .profile if no specific shell profile found
+  if [ -z "$shell_profile" ]; then
+    shell_profile="$HOME/.profile"
+  fi
+  
+  # Add to shell profile
+  echo "" >> "$shell_profile"
+  echo "# Plandex - OpenRouter API Key (added by install script)" >> "$shell_profile"
+  echo "export OPENROUTER_API_KEY='$api_key'" >> "$shell_profile"
+  
+  echo "✅ OpenRouter API key saved to $shell_profile"
+  echo ""
+  echo "💡 The API key will be available in new terminal sessions."
+  echo "   To use it in this session, run: export OPENROUTER_API_KEY='$api_key'"
+  echo ""
+  
+  # Also set it for current session
+  export OPENROUTER_API_KEY="$api_key"
+}
+
+setup_individual_providers () {
+  echo "🔧 Searching for existing API keys..."
+  echo ""
   
   local found_keys=()
   
-  # Search in shell profile files
-  local profile_files=(
-    "$HOME/.bashrc"
-    "$HOME/.bash_profile"
-    "$HOME/.zshrc"
-    "$HOME/.profile"
-    "$HOME/.config/fish/config.fish"
-  )
-  
-  # Search in env files
-  local env_files=(
-    "$HOME/.env"
-    "$HOME/.envrc"
-  )
-  
   # API key patterns to search for
   local key_vars=(
-    "OPENROUTER_API_KEY"
     "OPENAI_API_KEY"
     "ANTHROPIC_API_KEY"
     "GEMINI_API_KEY"
-    "GOOGLE_API_KEY"
     "AZURE_OPENAI_API_KEY"
     "DEEPSEEK_API_KEY"
     "PERPLEXITY_API_KEY"
@@ -542,37 +632,20 @@ search_api_keys () {
     fi
   done
   
-  # Search in profile files
-  for file in "${profile_files[@]}" "${env_files[@]}"; do
-    if [ -f "$file" ]; then
-      for key_var in "${key_vars[@]}"; do
-        if grep -q "export $key_var=" "$file" 2>/dev/null; then
-          # Check if not already in found_keys
-          if [[ ! " ${found_keys[@]} " =~ " ${key_var} " ]]; then
-            found_keys+=("$key_var")
-          fi
-        fi
-      done
-    fi
-  done
-  
-  if [ ${#found_keys[@]} -eq 0 ]; then
-    echo "❌ No API keys found in common locations."
+  if [ ${#found_keys[@]} -gt 0 ]; then
+    echo "✅ Found the following API keys in your environment:"
+    for key in "${found_keys[@]}"; do
+      echo "   • $key"
+    done
     echo ""
-    echo "💡 You can set API keys manually later by adding them to your shell profile:"
-    echo "   export OPENROUTER_API_KEY=your_key_here"
-    echo ""
-    return
+    echo "💡 These API keys will be used by Plandex."
+  else
+    echo "ℹ️  No API keys found in your current environment."
   fi
   
   echo ""
-  echo "✅ Found the following API keys in your environment:"
-  for key in "${found_keys[@]}"; do
-    echo "   • $key"
-  done
-  
-  echo ""
-  echo "💡 These API keys are available in your environment and will be used by Plandex."
+  echo "📚 To configure additional providers, visit:"
+  echo "   https://docs.plandex.ai/models/model-providers"
   echo ""
 }
 
@@ -605,8 +678,8 @@ setup_local_mode () {
     fi
   fi
   
-  # Search for API keys
-  search_api_keys
+  # Ask if user wants to configure a provider
+  configure_provider
   
   # Ask if user wants to start the server now
   echo ""
@@ -626,7 +699,7 @@ setup_local_mode () {
   echo "📚 Full documentation: https://docs.plandex.ai/hosting/self-hosting/local-mode-quickstart"
   echo ""
   
-  read -p "Would you like to clone and start the server now? [y/N]: " start_server_choice
+  read -p "Would you like to clone and start the server now? [y/N]: " start_server_choice </dev/tty
   
   if [[ "$start_server_choice" =~ ^[Yy]$ ]]; then
     echo ""
@@ -635,9 +708,9 @@ setup_local_mode () {
     local install_dir="$HOME/plandex-server"
     if [ -d "$install_dir" ]; then
       echo "⚠️  Directory $install_dir already exists."
-      read -p "Use existing directory? [y/N]: " use_existing
+      read -p "Use existing directory? [y/N]: " use_existing </dev/tty
       if [[ ! "$use_existing" =~ ^[Yy]$ ]]; then
-        read -p "Enter a different directory path: " install_dir
+        read -p "Enter a different directory path: " install_dir </dev/tty
       fi
     fi
     
@@ -681,11 +754,15 @@ if [ -t 0 ]; then
       echo ""
       echo "☁️  For Plandex Cloud, run 'plandex sign-in' and follow the prompts."
       echo ""
+      # Offer provider configuration for cloud mode too
+      configure_provider
       ;;
     cli-only)
       echo ""
       echo "⚡️ CLI-only installation complete!"
       echo ""
+      # Offer provider configuration for CLI-only mode
+      configure_provider
       ;;
   esac
 else
@@ -709,6 +786,10 @@ echo ""
 echo "$(printf '%*s' "$(tput cols)" '' | tr ' ' -)"
 echo ""
 
-# Search for API keys and provide guidance
-search_api_keys
-
+# Only provide API key guidance in interactive mode, after other setup is complete
+if [ -t 0 ]; then
+  # Only show guidance if no provider was configured
+  if [ -z "$OPENROUTER_API_KEY" ] && [ -z "$OPENAI_API_KEY" ] && [ -z "$ANTHROPIC_API_KEY" ]; then
+    provide_api_key_guidance
+  fi
+fi
