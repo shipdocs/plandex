@@ -1,3 +1,10 @@
+## CLI Version 2.2.3
+- Fix install script to build server from source for NanoGPT support
+- Change docker-compose.yml to build from source instead of using pre-built image
+- Update install script to build server locally instead of pulling from Docker Hub
+- Ensures new users automatically get NanoGPT universal provider support
+- Fixes credential checking to recognize NanoGPT for all model publishers
+
 ## CLI Version 2.2.2
 ## 🔗  Repository and URL Updates
 

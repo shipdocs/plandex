@@ -64,7 +64,12 @@ fi
 
 # Set Version
 if [[ -z "${PLANDEX_VERSION}" ]]; then
-  VERSION=$(curl -sL https://plandex.ai/v2/cli-version.txt)
+  # Get latest CLI version from GitHub releases API
+  VERSION=$(curl -sL https://api.github.com/repos/shipdocs/plandex/releases | grep '"tag_name"' | grep 'cli/v' | head -1 | sed 's/.*"cli\/v\([^"]*\)".*/\1/')
+  if [[ -z "$VERSION" ]]; then
+    echo "❌ Failed to fetch latest version from GitHub API, falling back to 2.2.3"
+    VERSION="2.2.3"
+  fi
 else
   VERSION=$PLANDEX_VERSION
   echo "Using custom version $VERSION"

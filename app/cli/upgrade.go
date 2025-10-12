@@ -35,9 +35,11 @@ func checkForUpgrade() {
 
 	term.StartSpinner("")
 	defer term.StopSpinner()
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	latestVersionURL := "https://plandex.ai/v2/cli-version.txt"
+
+	// Use GitHub releases API to get latest CLI version
+	latestVersionURL := "https://api.github.com/repos/shipdocs/plandex/releases"
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, latestVersionURL, nil)
 	if err != nil {
 		log.Println("Error creating request:", err)
@@ -56,8 +58,28 @@ func checkForUpgrade() {
 		return
 	}
 
-	versionStr := string(body)
-	versionStr = strings.TrimSpace(versionStr)
+	// Parse JSON to find latest CLI release
+	bodyStr := string(body)
+	versionStr := ""
+
+	// Look for CLI version tags in the format "cli/v2.2.3"
+	lines := strings.Split(bodyStr, "\n")
+	for _, line := range lines {
+		if strings.Contains(line, `"tag_name"`) && strings.Contains(line, `"cli/v`) {
+			// Extract version from: "tag_name": "cli/v2.2.3",
+			start := strings.Index(line, `"cli/v`) + 6
+			end := strings.Index(line[start:], `"`)
+			if start > 5 && end > 0 {
+				versionStr = line[start : start+end]
+				break
+			}
+		}
+	}
+
+	if versionStr == "" {
+		log.Println("Could not parse latest version from GitHub API")
+		return
+	}
 
 	latestVersion, err := semver.NewVersion(versionStr)
 	if err != nil {
