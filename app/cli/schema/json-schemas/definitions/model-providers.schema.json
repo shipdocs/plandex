@@ -12,6 +12,7 @@
     "azure-openai",
     "deepseek",
     "perplexity",
+    "nanogpt",
     "custom"
   ]
 }

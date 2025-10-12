@@ -6,6 +6,7 @@ import (
 
 const OpenAIV1BaseUrl = "https://api.openai.com/v1"
 const OpenRouterBaseUrl = "https://openrouter.ai/api/v1"
+const NanoGPTBaseUrl = "https://nano-gpt.com/api/v1"
 const LiteLLMBaseUrl = "http://localhost:4000/v1" // runs in the same container alongside the plandex server
 
 const OpenAIEnvVar = "OPENAI_API_KEY"
@@ -15,6 +16,7 @@ const GoogleAIStudioApiKeyEnvVar = "GEMINI_API_KEY"
 const AzureOpenAIEnvVar = "AZURE_OPENAI_API_KEY"
 const DeepSeekApiKeyEnvVar = "DEEPSEEK_API_KEY"
 const PerplexityApiKeyEnvVar = "PERPLEXITY_API_KEY"
+const NanoGPTApiKeyEnvVar = "NANOGPT_API_KEY"
 
 // not set directly via env vars, but used for auth var resolution
 const AnthropicClaudeMaxTokenEnvVar = "ANTHROPIC_CLAUDE_MAX_TOKEN"
@@ -46,6 +48,7 @@ const (
 	ModelProviderAzureOpenAI        ModelProvider = "azure-openai"
 	ModelProviderDeepSeek           ModelProvider = "deepseek"
 	ModelProviderPerplexity         ModelProvider = "perplexity"
+	ModelProviderNanoGPT            ModelProvider = "nanogpt"
 
 	ModelProviderAmazonBedrock ModelProvider = "aws-bedrock"
 
@@ -72,6 +75,7 @@ var AllModelProviders = []ModelProvider{
 	ModelProviderAmazonBedrock,
 	ModelProviderDeepSeek,
 	ModelProviderPerplexity,
+	ModelProviderNanoGPT,
 	ModelProviderOllama,
 	ModelProviderCustom,
 }
@@ -195,6 +199,11 @@ var BuiltInModelProviderConfigs = map[ModelProvider]ModelProviderConfigSchema{
 		Provider:     ModelProviderPerplexity,
 		BaseUrl:      LiteLLMBaseUrl,
 		ApiKeyEnvVar: PerplexityApiKeyEnvVar,
+	},
+	ModelProviderNanoGPT: {
+		Provider:     ModelProviderNanoGPT,
+		BaseUrl:      NanoGPTBaseUrl,
+		ApiKeyEnvVar: NanoGPTApiKeyEnvVar,
 	},
 	ModelProviderAmazonBedrock: {
 		Provider:   ModelProviderAmazonBedrock,

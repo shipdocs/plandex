@@ -105,6 +105,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderOpenAI, ModelName: "gpt-4.1"},
 			{Provider: ModelProviderAzureOpenAI, ModelName: "azure/gpt-4.1"},
 			{Provider: ModelProviderOpenRouter, ModelName: "openai/gpt-4.1"},
+			{Provider: ModelProviderNanoGPT, ModelName: "gpt-4.1"},
 		},
 	},
 	{
@@ -120,6 +121,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderOpenAI, ModelName: "gpt-4.1-mini"},
 			{Provider: ModelProviderAzureOpenAI, ModelName: "azure/gpt-4.1-mini"},
 			{Provider: ModelProviderOpenRouter, ModelName: "openai/gpt-4.1-mini"},
+			{Provider: ModelProviderNanoGPT, ModelName: "gpt-4.1-mini"},
 		},
 	},
 	{
@@ -135,6 +137,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderOpenAI, ModelName: "gpt-4.1-nano"},
 			{Provider: ModelProviderAzureOpenAI, ModelName: "azure/gpt-4.1-nano"},
 			{Provider: ModelProviderOpenRouter, ModelName: "openai/gpt-4.1-nano"},
+			{Provider: ModelProviderNanoGPT, ModelName: "gpt-4.1-nano"},
 		},
 	},
 	{
@@ -237,6 +240,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderGoogleVertex, ModelName: "vertex_ai/claude-3-5-sonnet-v2@20241022"},
 			{Provider: ModelProviderAmazonBedrock, ModelName: "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"},
 			{Provider: ModelProviderOpenRouter, ModelName: "anthropic/claude-3.5-sonnet"},
+			{Provider: ModelProviderNanoGPT, ModelName: "claude-3-5-sonnet-20241022"},
 		},
 	},
 	{

@@ -501,13 +501,18 @@ configure_provider () {
   echo "      • Simple unified billing and usage tracking"
   echo "      • Get started: https://openrouter.ai"
   echo ""
-  echo "   2) Individual providers (OpenAI, Anthropic, Google, etc.)"
+  echo "   2) NanoGPT (Single API key for multiple AI providers)"
+  echo "      • Access models from OpenAI, Anthropic, Google, and more"
+  echo "      • OpenAI-compatible API with unified access"
+  echo "      • Get started: https://nano-gpt.com"
+  echo ""
+  echo "   3) Individual providers (OpenAI, Anthropic, Google, etc.)"
   echo "      • Configure specific providers you already have accounts with"
   echo "      • Requires separate API keys for each provider"
   echo ""
-  echo "   3) Skip for now (configure manually later)"
+  echo "   4) Skip for now (configure manually later)"
   echo ""
-  read -p "Enter your choice [1-3]: " provider_choice </dev/tty
+  read -p "Enter your choice [1-4]: " provider_choice </dev/tty
   echo ""
   
   case $provider_choice in
@@ -515,9 +520,12 @@ configure_provider () {
       setup_openrouter
       ;;
     2)
-      setup_individual_providers
+      setup_nanogpt
       ;;
     3)
+      setup_individual_providers
+      ;;
+    4)
       echo "⏭️  Provider configuration skipped."
       echo ""
       echo "💡 You can configure providers later by setting environment variables."
@@ -609,6 +617,82 @@ setup_openrouter () {
   export OPENROUTER_API_KEY="$api_key"
 }
 
+setup_nanogpt () {
+  echo "🚀 Setting up NanoGPT"
+  echo ""
+  echo "   NanoGPT provides access to multiple AI models through a single API key."
+  echo "   This includes models from:"
+  echo "   • OpenAI (GPT-4, GPT-4o, etc.)"
+  echo "   • Anthropic (Claude Sonnet, Haiku, etc.)"
+  echo "   • Google (Gemini models)"
+  echo "   • DeepSeek, Perplexity, and more"
+  echo ""
+  echo "   👉 Visit https://nano-gpt.com to create an account"
+  echo "   👉 Get your API key from your NanoGPT dashboard"
+  echo ""
+
+  # Check if NanoGPT key already exists
+  if [ -n "$NANOGPT_API_KEY" ]; then
+    echo "✅ Found existing NANOGPT_API_KEY in your environment"
+    echo ""
+    read -p "Would you like to update it? [y/N]: " update_choice </dev/tty
+    if [[ ! "$update_choice" =~ ^[Yy]$ ]]; then
+      echo "✅ Using existing NanoGPT API key"
+      return
+    fi
+  fi
+
+  read -p "Do you have a NanoGPT API key to configure now? [y/N]: " has_key </dev/tty
+
+  if [[ ! "$has_key" =~ ^[Yy]$ ]]; then
+    echo ""
+    echo "ℹ️  No problem! You can configure NanoGPT later by setting:"
+    echo "   export NANOGPT_API_KEY='your-key-here'"
+    echo ""
+    return
+  fi
+
+  echo ""
+  read -p "Enter your NanoGPT API key: " api_key </dev/tty
+  echo ""
+
+  if [ -z "$api_key" ]; then
+    echo "❌ No API key provided. Skipping configuration."
+    return
+  fi
+
+  # Determine which shell profile to use
+  local shell_profile=""
+  if [ -n "$BASH_VERSION" ]; then
+    if [ -f "$HOME/.bashrc" ]; then
+      shell_profile="$HOME/.bashrc"
+    elif [ -f "$HOME/.bash_profile" ]; then
+      shell_profile="$HOME/.bash_profile"
+    fi
+  elif [ -n "$ZSH_VERSION" ]; then
+    shell_profile="$HOME/.zshrc"
+  fi
+
+  # Fallback to .profile if no specific shell profile found
+  if [ -z "$shell_profile" ]; then
+    shell_profile="$HOME/.profile"
+  fi
+
+  # Add to shell profile
+  echo "" >> "$shell_profile"
+  echo "# Plandex - NanoGPT API Key (added by install script)" >> "$shell_profile"
+  echo "export NANOGPT_API_KEY='$api_key'" >> "$shell_profile"
+
+  echo "✅ NanoGPT API key saved to $shell_profile"
+  echo ""
+  echo "💡 The API key will be available in new terminal sessions."
+  echo "   To use it in this session, run: export NANOGPT_API_KEY='$api_key'"
+  echo ""
+
+  # Also set it for current session
+  export NANOGPT_API_KEY="$api_key"
+}
+
 setup_individual_providers () {
   echo "🔧 Searching for existing API keys..."
   echo ""
@@ -623,6 +707,7 @@ setup_individual_providers () {
     "AZURE_OPENAI_API_KEY"
     "DEEPSEEK_API_KEY"
     "PERPLEXITY_API_KEY"
+    "NANOGPT_API_KEY"
   )
   
   # First check current environment
