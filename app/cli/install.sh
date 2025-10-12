@@ -259,7 +259,11 @@ provide_api_key_guidance () {
     echo "💡 To persist your API keys, add them to your shell profile (~/.bashrc, ~/.zshrc, etc.)"
     echo "   or create a .env file in your project directory."
     echo ""
-    echo "📚 For more details, visit: https://docs.plandex.ai/models/model-providers"
+    echo "� For NanoGPT users: After setting up your API key, configure billing mode:"
+    echo "   • 'plandex connect-nanogpt' for subscription mode (recommended)"
+    echo "   • 'plandex disconnect-nanogpt' for balance/pay-per-use mode"
+    echo ""
+    echo "�📚 For more details, visit: https://docs.plandex.ai/models/model-providers"
   fi
   
   echo ""
@@ -509,6 +513,7 @@ configure_provider () {
   echo "   2) NanoGPT (Single API key for multiple AI providers)"
   echo "      • Access models from OpenAI, Anthropic, Google, and more"
   echo "      • OpenAI-compatible API with unified access"
+  echo "      • Supports both subscription and pay-per-use billing"
   echo "      • Get started: https://nano-gpt.com"
   echo ""
   echo "   3) Individual providers (OpenAI, Anthropic, Google, etc.)"
@@ -635,6 +640,10 @@ setup_nanogpt () {
   echo "   👉 Visit https://nano-gpt.com to create an account"
   echo "   👉 Get your API key from your NanoGPT dashboard"
   echo ""
+  echo "   💡 NanoGPT offers two billing modes:"
+  echo "      • Balance mode: Pay-per-use with prepaid credits"
+  echo "      • Subscription mode: Fixed monthly subscription"
+  echo ""
 
   # Check if NanoGPT key already exists
   if [ -n "$NANOGPT_API_KEY" ]; then
@@ -643,6 +652,38 @@ setup_nanogpt () {
     read -p "Would you like to update it? [y/N]: " update_choice </dev/tty
     if [[ ! "$update_choice" =~ ^[Yy]$ ]]; then
       echo "✅ Using existing NanoGPT API key"
+
+      # Still ask about subscription mode for existing keys
+      echo ""
+      echo "🔧 Would you like to configure NanoGPT billing mode?"
+      echo ""
+      echo "   1) Subscription mode (recommended for heavy usage)"
+      echo "   2) Balance mode (pay-per-use)"
+      echo "   3) Skip (configure later)"
+      echo ""
+      read -p "Enter your choice [1-3]: " billing_choice </dev/tty
+
+      case $billing_choice in
+        1)
+          echo ""
+          echo "✅ Subscription mode will be enabled after you sign in to Plandex."
+          echo "   Run 'plandex connect-nanogpt' to enable subscription mode."
+          echo ""
+          ;;
+        2)
+          echo ""
+          echo "💰 Balance mode will be used (this is the default)."
+          echo "   You can switch to subscription mode later with 'plandex connect-nanogpt'."
+          echo ""
+          ;;
+        *)
+          echo ""
+          echo "⏭️  Billing mode configuration skipped."
+          echo "   You can configure it later with 'plandex connect-nanogpt' (subscription)"
+          echo "   or 'plandex disconnect-nanogpt' (balance)."
+          echo ""
+          ;;
+      esac
       return
     fi
   fi
@@ -653,6 +694,10 @@ setup_nanogpt () {
     echo ""
     echo "ℹ️  No problem! You can configure NanoGPT later by setting:"
     echo "   export NANOGPT_API_KEY='your-key-here'"
+    echo ""
+    echo "   After setting up your API key, you can choose billing mode:"
+    echo "   • 'plandex connect-nanogpt' for subscription mode"
+    echo "   • 'plandex disconnect-nanogpt' for balance mode"
     echo ""
     return
   fi
@@ -696,6 +741,45 @@ setup_nanogpt () {
 
   # Also set it for current session
   export NANOGPT_API_KEY="$api_key"
+
+  # Ask about billing mode
+  echo "🔧 Which billing mode would you like to use?"
+  echo ""
+  echo "   1) Subscription mode (recommended for heavy usage)"
+  echo "      • Fixed monthly cost regardless of usage"
+  echo "      • Access to subscription-only models"
+  echo "      • Better for consistent, high-volume usage"
+  echo ""
+  echo "   2) Balance mode (pay-per-use)"
+  echo "      • Pay only for what you use"
+  echo "      • Good for occasional or light usage"
+  echo "      • Requires maintaining a prepaid balance"
+  echo ""
+  echo "   3) Skip (configure later)"
+  echo ""
+  read -p "Enter your choice [1-3]: " billing_choice </dev/tty
+
+  case $billing_choice in
+    1)
+      echo ""
+      echo "✅ Subscription mode will be enabled after you sign in to Plandex."
+      echo "   Run 'plandex connect-nanogpt' to enable subscription mode."
+      echo ""
+      ;;
+    2)
+      echo ""
+      echo "💰 Balance mode will be used (this is the default)."
+      echo "   You can switch to subscription mode later with 'plandex connect-nanogpt'."
+      echo ""
+      ;;
+    *)
+      echo ""
+      echo "⏭️  Billing mode configuration skipped."
+      echo "   You can configure it later with 'plandex connect-nanogpt' (subscription)"
+      echo "   or 'plandex disconnect-nanogpt' (balance)."
+      echo ""
+      ;;
+  esac
 }
 
 setup_individual_providers () {
