@@ -1,5 +1,8 @@
-## Server Version 2.2.1
-See CLI 2.2.1 release notes.
+## Server Version 2.2.2
+- Fix for panic in execTellPlan when active plan is nil
+- Resolved "Invalid memory address or nil pointer dereference" panic during plan execution
+- Added nil check in panic recovery defer block to prevent race condition crashes
+- Improved server stability and error handling in tell execution flow
 
 ## Server Version 2.2.1
 See CLI 2.2.1 release notes.
