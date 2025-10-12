@@ -149,7 +149,7 @@ Run the interactive installer, which will guide you through:
 - Searching for existing API keys to auto-configure
 
 ```bash
-curl -sL https://plandex.ai/install.sh | bash
+curl -sL https://raw.githubusercontent.com/shipdocs/plandex/main/app/cli/install.sh | bash
 ```
 
 The installer will prompt you in an interactive terminal. For non-interactive/piped installations, it will install the CLI only.

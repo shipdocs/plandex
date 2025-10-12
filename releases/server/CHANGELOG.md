@@ -11,8 +11,8 @@ See CLI 2.2.0 release notes.
 - Fix for potential hang in file map queue
 
 ## Server Version 2.1.7
-- Fix for "conversation summary timestamp not found in conversation" error (https://github.com/plandex-ai/plandex/issues/274)
-- Fix for potential panic/crash during plan stream (https://github.com/plandex-ai/plandex/issues/275)
+- Fix for "conversation summary timestamp not found in conversation" error (https://github.com/shipdocs/plandex/issues/274)
+- Fix for potential panic/crash during plan stream (https://github.com/shipdocs/plandex/issues/275)
 - Better protection against panics/crashes in server goroutines across the board
 
 ## Server Version 2.1.6+1
@@ -86,8 +86,8 @@ Server-side fix for context auto-load hanging when there's no valid context to l
 - Version tag sanitation fix for GitHub Action to build and push server image to DockerHub
 
 ## Server Version 2.0.0+1
-- Fix for custom model creation (https://github.com/plandex-ai/plandex/issues/214)
-- Fix for version check on self-hosted (https://github.com/plandex-ai/plandex/issues/213)
+- Fix for custom model creation (https://github.com/shipdocs/plandex/issues/214)
+- Fix for version check on self-hosted (https://github.com/shipdocs/plandex/issues/213)
 - Fix for GitHub Action to build and push server image to DockerHub
 
 ## Server Version 2.0.0
@@ -116,7 +116,7 @@ See CLI 2.0.0 release notes.
 - Fix for occasional 'Error getting verify state for file' error
 - Fix for occasional 'Fatal: unable to write new_index file' error
 - Fix for occasional 'nothing to commit, working tree clean' error
-- When hitting OpenAI rate limits, Plandex will now parse error messages that include a recommended wait time and automatically wait that long before retrying, up to 30 seconds (https://github.com/plandex-ai/plandex/issues/123)
+- When hitting OpenAI rate limits, Plandex will now parse error messages that include a recommended wait time and automatically wait that long before retrying, up to 30 seconds (https://github.com/shipdocs/plandex/issues/123)
 - Some prompt updates to encourage creation of multiple smaller files rather than one mega-file when generating files for a new feature or project. Multiple smaller files are faster to generate, use less tokens, and have a lower error rate compared to a continually updated large file.
 
 ## Version 1.0.0
@@ -156,10 +156,10 @@ See CLI 2.0.0 release notes.
 
 ##  🐛  🛠️   Bug fixes
 
-- Fix for a potential panic during account creation (https://github.com/plandex-ai/plandex/issues/76)
-- Fixes for some account creation flow issues (https://github.com/plandex-ai/plandex/issues/106)
-- Fix for occasional "Stream buffer tokens too high" error (https://github.com/plandex-ai/plandex/issues/34).
-- Fix for potential panic when updating model settings. Might possibly be the cause of or somehow related to https://github.com/plandex-ai/plandex/issues/121 but hard to be sure (maybe AWS was just being flakey).
+- Fix for a potential panic during account creation (https://github.com/shipdocs/plandex/issues/76)
+- Fixes for some account creation flow issues (https://github.com/shipdocs/plandex/issues/106)
+- Fix for occasional "Stream buffer tokens too high" error (https://github.com/shipdocs/plandex/issues/34).
+- Fix for potential panic when updating model settings. Might possibly be the cause of or somehow related to https://github.com/shipdocs/plandex/issues/121 but hard to be sure (maybe AWS was just being flakey).
 - Attempted fix for rare git repo race condition @jesseswell_1 caught that gives error ending with: 
 ```
 Exit status 128, output
@@ -168,12 +168,12 @@ Exit status 128, output
 
 ##   📚  🤔   Readme updates
 
-- The [readme](https://github.com/plandex-ai/plandex) has been revamped to be more informative and easier to navigate.
+- The [readme](https://github.com/shipdocs/plandex) has been revamped to be more informative and easier to navigate.
 
 ##  🏡  📦   Easy self-contained startup script for local mode and self-hosting
 
 ```bash
-git clone https://github.com/plandex-ai/plandex.git
+git clone https://github.com/shipdocs/plandex.git
 cd plandex/app
 ./start_local.sh
 ``` 
@@ -211,18 +211,18 @@ cd plandex/app
 ## Version 0.8.4
 - Add support for new OpenAI models: `gpt-4-turbo` and `gpt-4-turbo-2024-04-09`
 - Make `gpt-4-turbo` model the new default model for the planner, builder, and auto-continue roles -- in testing it seems to be better at reasoning and significantly less lazy than the previous default for these roles, `gpt-4-turbo-preview` -- any plan that has not previously had its model settings modified will now use `gpt-4-turbo` by default (those that have been modified will need to be updated manually) -- remember that you can always use `plandex set-model` to change models for your plans
-- Fix for handling files that are loaded into context and later deleted from the file system (https://github.com/plandex-ai/plandex/issues/47)
-- Handle file paths with ### prefixes (https://github.com/plandex-ai/plandex/issues/77)
+- Fix for handling files that are loaded into context and later deleted from the file system (https://github.com/shipdocs/plandex/issues/47)
+- Handle file paths with ### prefixes (https://github.com/shipdocs/plandex/issues/77)
 - Fix for occasional race condition during file builds that causes error "Fatal: Unable to write new index file"
 
 ## Version 0.8.3
-- SMTP_FROM environment variable for setting from address when self-hosting and using SMTP (https://github.com/plandex-ai/plandex/pull/39)
-- Add support for OPENAI_ENDPOINT environment variable for custom OpenAI endpoints (https://github.com/plandex-ai/plandex/pull/46)
+- SMTP_FROM environment variable for setting from address when self-hosting and using SMTP (https://github.com/shipdocs/plandex/pull/39)
+- Add support for OPENAI_ENDPOINT environment variable for custom OpenAI endpoints (https://github.com/shipdocs/plandex/pull/46)
 - Add support for OPENAI_ORG_ID environment variable for setting the OpenAI organization ID when using an API key with multiple OpenAI organizations.
-- Fix for unhelpful "Error getting plan, context, convo, or summaries" error message when OpenAI returns an error for invalid API key or insufficient credits (https://github.com/plandex-ai/plandex/issues/32)
+- Fix for unhelpful "Error getting plan, context, convo, or summaries" error message when OpenAI returns an error for invalid API key or insufficient credits (https://github.com/shipdocs/plandex/issues/32)
 
 ## Version 0.8.2
-- Fix for creating an org that auto-adds users based on email domain (https://github.com/plandex-ai/plandex/issues/24)
+- Fix for creating an org that auto-adds users based on email domain (https://github.com/shipdocs/plandex/issues/24)
 - Fix for possible crash after error in file build
 - Added crash prevention measures across the board
 - Fix for occasional "replacements failed" error
@@ -232,7 +232,7 @@ cd plandex/app
 ## Version 0.8.1
 - Fixes for two potential server crashes
 - Fix for server git repo remaining in locked state after a crash, which caused various issues
-- Fix for server git user and email not being set in some environments (https://github.com/plandex-ai/plandex/issues/8)
+- Fix for server git user and email not being set in some environments (https://github.com/shipdocs/plandex/issues/8)
 - Fix for 'replacements failed' error that was popping up in some circumstances
 - Fix for build issue that could cause large updates to fail, take too long, or use too many tokens in some circumstances
 - Clean up extraneous logging
