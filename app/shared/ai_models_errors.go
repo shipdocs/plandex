@@ -100,6 +100,7 @@ func (m *ModelRoleConfig) GetFallbackForModelError(
 
 	return FallbackResult{
 		ModelRoleConfig: m,
+		BaseModelConfig: m.GetBaseModelConfig(authVars, settings, orgUserConfig),
 		IsFallback:      false,
 	}
 }
