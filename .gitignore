@@ -19,6 +19,12 @@ node_modules/
 dist/
 __pycache__/
 
+# Build artifacts
+build/
+release/
+*.tar.gz
+plandex_install_tmp/
+
 .aider.*
 *.code-workspace
 
