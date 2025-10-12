@@ -197,6 +197,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderAmazonBedrock, ModelName: "anthropic.claude-sonnet-4-20250514-v1:0"},
 			{Provider: ModelProviderGoogleVertex, ModelName: "vertex_ai/claude-sonnet-4@20250514"},
 			{Provider: ModelProviderOpenRouter, ModelName: "anthropic/claude-sonnet-4"},
+			{Provider: ModelProviderNanoGPT, ModelName: "claude-sonnet-4"},
 		},
 	},
 	{
@@ -276,6 +277,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderGoogleAIStudio, ModelName: "gemini/gemini-1.5-pro"},
 			{Provider: ModelProviderGoogleVertex, ModelName: "vertex_ai/gemini-1.5-pro"},
 			{Provider: ModelProviderOpenRouter, ModelName: "google/gemini-pro-1.5"},
+			{Provider: ModelProviderNanoGPT, ModelName: "gemini-1.5-pro"},
 		},
 	},
 	{
@@ -291,6 +293,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderGoogleAIStudio, ModelName: "gemini/gemini-2.5-pro"},
 			{Provider: ModelProviderGoogleVertex, ModelName: "vertex_ai/gemini-2.5-pro"},
 			{Provider: ModelProviderOpenRouter, ModelName: "google/gemini-2.5-pro"},
+			{Provider: ModelProviderNanoGPT, ModelName: "gemini-2.5-pro"},
 		},
 	},
 	{
