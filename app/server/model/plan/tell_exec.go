@@ -113,10 +113,12 @@ func execTellPlan(params execTellPlanParams) {
 
 			go notify.NotifyErr(notify.SeverityError, fmt.Errorf("execTellPlan: Panic: %v\n%s", r, string(debug.Stack())))
 
-			active.StreamDoneCh <- &shared.ApiError{
-				Type:   shared.ApiErrorTypeOther,
-				Status: http.StatusInternalServerError,
-				Msg:    fmt.Sprintf("Panic in execTellPlan: %v\n%s", r, string(debug.Stack())),
+			if active != nil {
+				active.StreamDoneCh <- &shared.ApiError{
+					Type:   shared.ApiErrorTypeOther,
+					Status: http.StatusInternalServerError,
+					Msg:    fmt.Sprintf("Panic in execTellPlan: %v\n%s", r, string(debug.Stack())),
+				}
 			}
 		}
 	}()
