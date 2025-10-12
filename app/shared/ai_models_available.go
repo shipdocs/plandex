@@ -174,9 +174,9 @@ var BuiltInModels = []*BaseModelConfigSchema{
 	{
 		ModelTag:    "anthropic/claude-sonnet-4",
 		Publisher:   ModelPublisherAnthropic,
-		Description: "Anthropic Claude Sonnet 4",
+		Description: "Anthropic Claude Sonnet 4.5 - Frontier-level coding and agentic performance with substantial gains in computer use, reasoning, and math",
 		BaseModelShared: BaseModelShared{
-			DefaultMaxConvoTokens: 15000, MaxTokens: 200000, MaxOutputTokens: 128000,
+			DefaultMaxConvoTokens: 15000, MaxTokens: 1000000, MaxOutputTokens: 128000,
 			ReservedOutputTokens: 40000, SupportsCacheControl: true,
 			PreferredOutputFormat: ModelOutputFormatXml, SingleMessageNoSystemPrompt: true,
 			TokenEstimatePaddingPct: 0.10,
@@ -197,7 +197,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderAmazonBedrock, ModelName: "anthropic.claude-sonnet-4-20250514-v1:0"},
 			{Provider: ModelProviderGoogleVertex, ModelName: "vertex_ai/claude-sonnet-4@20250514"},
 			{Provider: ModelProviderOpenRouter, ModelName: "anthropic/claude-sonnet-4"},
-			{Provider: ModelProviderNanoGPT, ModelName: "claude-3-5-sonnet-20241022"},
+			{Provider: ModelProviderNanoGPT, ModelName: "claude-sonnet-4-5-20250929"},
 		},
 	},
 	{
@@ -321,6 +321,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			{Provider: ModelProviderGoogleAIStudio, ModelName: "gemini/gemini-2.5-flash"},
 			{Provider: ModelProviderGoogleVertex, ModelName: "vertex_ai/gemini-2.5-flash"},
 			{Provider: ModelProviderOpenRouter, ModelName: "google/gemini-2.5-flash"},
+			{Provider: ModelProviderNanoGPT, ModelName: "gemini-2.5-flash"},
 		},
 	},
 	{
@@ -335,6 +336,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 		Providers: []BaseModelUsesProvider{
 			{Provider: ModelProviderDeepSeek, ModelName: "deepseek/deepseek-chat"},
 			{Provider: ModelProviderOpenRouter, ModelName: "deepseek/deepseek-chat-v3"},
+			{Provider: ModelProviderNanoGPT, ModelName: "deepseek-chat"},
 		},
 	},
 	{
@@ -353,6 +355,7 @@ var BuiltInModels = []*BaseModelConfigSchema{
 		Providers: []BaseModelUsesProvider{
 			{Provider: ModelProviderDeepSeek, ModelName: "deepseek/deepseek-reasoner"},
 			{Provider: ModelProviderOpenRouter, ModelName: "deepseek/deepseek-r1-0528"},
+			{Provider: ModelProviderNanoGPT, ModelName: "deepseek-r1"},
 		},
 	},
 	{
