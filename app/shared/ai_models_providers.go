@@ -2,6 +2,7 @@ package shared
 
 import (
 	"fmt"
+	"log"
 )
 
 const OpenAIV1BaseUrl = "https://api.openai.com/v1"
@@ -345,6 +346,7 @@ func GetProvidersForAuthVarsWithModelId(authVars map[string]string, settings *Pl
 
 		// Handle NanoGPT subscription preference
 		if orgUserConfig != nil {
+			log.Printf("DEBUG: NanoGPT provider selection - UseNanoGPTSubscription=%v, provider=%v", orgUserConfig.UseNanoGPTSubscription, provider.Provider)
 			// If user prefers subscription, skip regular NanoGPT provider when subscription is available
 			if orgUserConfig.UseNanoGPTSubscription && provider.Provider == ModelProviderNanoGPT {
 				// Check if subscription provider is available for this model
@@ -356,21 +358,25 @@ func GetProvidersForAuthVarsWithModelId(authVars map[string]string, settings *Pl
 					}
 				}
 				if hasSubscriptionProvider {
+					log.Printf("DEBUG: Skipping regular NanoGPT in favor of subscription")
 					continue // Skip regular NanoGPT in favor of subscription
 				}
 			}
 			// If user doesn't prefer subscription, skip subscription provider
 			if !orgUserConfig.UseNanoGPTSubscription && provider.Provider == ModelProviderNanoGPTSubscription {
+				log.Printf("DEBUG: Skipping NanoGPT subscription provider (user prefers balance)")
 				continue
 			}
 		} else {
 			// If no user config, default to regular NanoGPT (skip subscription)
 			if provider.Provider == ModelProviderNanoGPTSubscription {
+				log.Printf("DEBUG: Skipping NanoGPT subscription provider (no user config)")
 				continue
 			}
 		}
 
 		res = append(res, provider)
+		log.Printf("DEBUG: Added provider to list: %v", provider.Provider)
 	}
 
 	return res
