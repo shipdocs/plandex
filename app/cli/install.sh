@@ -792,9 +792,9 @@ setup_local_mode () {
 
   cd "$install_dir/app"
 
-  # Start the server in detached mode
-  echo "📥 Pulling latest Docker images..."
-  docker compose pull plandex-server > /dev/null 2>&1
+  # Build and start the server in detached mode
+  echo "🔨 Building Plandex server from source..."
+  docker compose build plandex-server > /dev/null 2>&1
 
   echo "🔄 Starting containers..."
   docker compose up -d
