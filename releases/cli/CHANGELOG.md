@@ -1,3 +1,11 @@
+## CLI Version 2.2.4
+- Fix version endpoint to use GitHub API instead of external endpoint
+- Update install script to fetch latest version from GitHub releases API
+- Update upgrade.go to use GitHub API for version checking
+- Fixes issue where install script fetched outdated version (2.2.1) from plandex.ai
+- Ensures users always get the latest CLI version with all bug fixes
+- Improved reliability by removing dependency on external version endpoint
+
 ## CLI Version 2.2.3
 - Fix install script to build server from source for NanoGPT support
 - Change docker-compose.yml to build from source instead of using pre-built image
