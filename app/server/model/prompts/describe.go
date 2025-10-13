@@ -6,9 +6,15 @@ import (
 	"github.com/sashabaranov/go-openai/jsonschema"
 )
 
-const SysDescribeXml = `You are an AI parser. You turn an AI's plan for a programming task into a structured description. You MUST output a valid XML response that includes a <commitMsg> tag. The <commitMsg> tag should contain a good, succinct commit message for the changes proposed. Do not use XML attributes - put all data as tag content.
+const SysDescribeXml = `You are an AI parser. You turn an AI's plan for a programming task into a structured description.
 
-Example response:
+Output format requirements:
+- Output EXACTLY one XML element: <commitMsg>...</commitMsg>
+- Do NOT include any XML prolog, code fences, explanations, or extra text before or after the element
+- Do NOT use XML attributes; put all data as tag content
+- The commit message must be a good, succinct, imperative commit title for the proposed changes
+
+Example (output should be exactly this structure, on a single line is fine):
 <commitMsg>Add user authentication system with JWT support</commitMsg>`
 
 const SysDescribe = "You are an AI parser. You turn an AI's plan for a programming task into a structured description. You MUST call the 'describePlan' function with a valid JSON object that includes the 'commitMsg' key. 'commitMsg' should be a good, succinct commit message for the changes proposed. You must ALWAYS call the 'describePlan' function. Never call any other function."

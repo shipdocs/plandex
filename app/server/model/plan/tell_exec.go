@@ -392,23 +392,14 @@ func execTellPlan(params execTellPlanParams) {
 
 	modelConfig := tentativeModelConfig
 
-	log.Println("Tell plan - setting modelConfig")
-	log.Println("Tell plan - requestTokens:", requestTokens)
-	log.Println("Tell plan - state.currentStage.TellStage:", state.currentStage.TellStage)
-	log.Println("Tell plan - state.currentStage.PlanningPhase:", state.currentStage.PlanningPhase)
-
 	if state.currentStage.TellStage == shared.TellStagePlanning {
 		if state.currentStage.PlanningPhase == shared.PlanningPhaseContext {
-			log.Println("Tell plan - isContextStage - setting modelConfig to context loader")
 			modelConfig = state.settings.GetModelPack().GetArchitect().GetRoleForInputTokens(requestTokens, state.settings)
-			log.Println("Tell plan - got modelConfig for context phase")
 		} else if state.currentStage.PlanningPhase == shared.PlanningPhaseTasks {
 			modelConfig = state.settings.GetModelPack().Planner.GetRoleForInputTokens(requestTokens, state.settings)
-			log.Println("Tell plan - got modelConfig for tasks phase")
 		}
 	} else if state.currentStage.TellStage == shared.TellStageImplementation {
 		modelConfig = state.settings.GetModelPack().GetCoder().GetRoleForInputTokens(requestTokens, state.settings)
-		log.Println("Tell plan - got modelConfig for implementation stage")
 	}
 
 	state.modelConfig = &modelConfig
@@ -416,9 +407,6 @@ func execTellPlan(params execTellPlanParams) {
 	baseModelConfig := modelConfig.GetBaseModelConfig(authVars, state.settings, state.orgUserConfig)
 
 	if baseModelConfig == nil {
-		log.Println("Tell plan - baseModelConfig is nil")
-		log.Println("Tell plan - modelConfig id:", modelConfig.ModelId)
-
 		go notify.NotifyErr(notify.SeverityError, fmt.Errorf("No model config found for: %s", state.modelConfig.ModelId))
 		active.StreamDoneCh <- &shared.ApiError{
 			Type:   shared.ApiErrorTypeOther,
@@ -502,7 +490,7 @@ func (state *activeTellStreamState) doTellRequest() {
 
 	fallbackRes := modelConfig.GetFallbackForModelError(state.numErrorRetry, state.didProviderFallback, state.modelErr, authVars, state.settings, state.orgUserConfig)
 	modelConfig = fallbackRes.ModelRoleConfig
-	stop := []string{"<PlandexFinish/>"}
+	stop := []string{"<PlandexFinish/>", "<PlandexFinish />", "<PlandexFinish>"}
 
 	baseModelConfig := modelConfig.GetBaseModelConfig(state.authVars, state.settings, state.orgUserConfig)
 

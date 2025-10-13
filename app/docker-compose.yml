@@ -28,7 +28,8 @@ services:
       LOCAL_MODE: 1
       PLANDEX_BASE_DIR: /plandex-server
       OLLAMA_BASE_URL: http://host.docker.internal:11434
-      
+      NANOGPT_API_KEY: ${NANOGPT_API_KEY}
+
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:

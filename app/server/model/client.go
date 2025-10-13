@@ -329,13 +329,13 @@ func createChatCompletionStreamExtended(
 		return nil, fmt.Errorf("error marshaling request: %w", err)
 	}
 
-	// log.Println("request jsonBody", string(jsonBody))
+	log.Printf("DEBUG: Request body: %s", string(jsonBody))
 
 	// Create new request
 	baseUrl := baseModelConfig.BaseUrl
 	url := baseUrl + "/chat/completions"
 
-	log.Printf("DEBUG: Making API request to URL: %s (provider: %s)", url, baseModelConfig.Provider)
+	log.Printf("DEBUG: Making API request to URL: %s (provider: %s, model: %s)", url, baseModelConfig.Provider, baseModelConfig.ModelName)
 
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(jsonBody))
 	if err != nil {

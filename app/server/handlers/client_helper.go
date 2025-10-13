@@ -48,6 +48,35 @@ func initClients(params initClientsParams) initClientsResult {
 		}
 	}
 
+	// In local mode, populate authVars from environment variables
+	isLocalMode := os.Getenv("GOENV") == "development" && os.Getenv("LOCAL_MODE") == "1"
+	if isLocalMode && len(authVars) == 0 {
+		// Get all provider configs to know which env vars to check
+		allProviders := []shared.ModelProviderConfigSchema{}
+		for _, providerConfig := range shared.BuiltInModelProviderConfigs {
+			allProviders = append(allProviders, providerConfig)
+		}
+		if settings != nil {
+			for _, customProvider := range settings.CustomProviders {
+				allProviders = append(allProviders, customProvider.ToModelProviderConfigSchema())
+			}
+		}
+
+		// Check environment for each provider's required vars
+		for _, providerConfig := range allProviders {
+			if providerConfig.ApiKeyEnvVar != "" {
+				if val := os.Getenv(providerConfig.ApiKeyEnvVar); val != "" {
+					authVars[providerConfig.ApiKeyEnvVar] = val
+				}
+			}
+			for _, extraAuthVar := range providerConfig.ExtraAuthVars {
+				if val := os.Getenv(extraAuthVar.Var); val != "" {
+					authVars[extraAuthVar.Var] = val
+				}
+			}
+		}
+	}
+
 	hookResult, apiErr := hooks.ExecHook(hooks.GetIntegratedModels, hooks.HookParams{
 		Auth: params.auth,
 		Plan: params.plan,

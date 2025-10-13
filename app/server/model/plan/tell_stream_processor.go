@@ -120,10 +120,13 @@ func (state *activeTellStreamState) processChunk(choice types.ExtendedChatComple
 		return state.handleMissingFile(bufferOrStreamRes.content, currentFile, bufferOrStreamRes.blockLang)
 	}
 
+	// Append only the content we actually stream to the client (sanitized/buffered)
+if bufferOrStreamRes.shouldStream && bufferOrStreamRes.content != "" {
 	UpdateActivePlan(planId, branch, func(ap *types.ActivePlan) {
-		ap.CurrentReplyContent += content
+		ap.CurrentReplyContent += bufferOrStreamRes.content
 		ap.NumTokens++
 	})
+}
 
 	if verboseLogging {
 		log.Println("processor before bufferOrStream")
@@ -163,6 +166,47 @@ type bufferOrStreamResult struct {
 }
 
 func (processor *chunkProcessor) bufferOrStream(content string, parserRes *types.ReplyParserRes, currentStage shared.CurrentStage, manualStopSequences []string) bufferOrStreamResult {
+	// Always sanitize any visible finish tag prefix even if provider-native stops are in use
+	if idx := strings.Index(content, "<PlandexFinish"); idx >= 0 {
+		if idx > 0 {
+			return bufferOrStreamResult{
+				shouldStream: true,
+				content:      content[:idx],
+				shouldStop:   true,
+			}
+		}
+		return bufferOrStreamResult{
+			shouldStream: false,
+			shouldStop:   true,
+		}
+	}
+
+		// Also handle split-across-chunks cases by checking buffer+chunk against known finish variants
+		finishVariants := []string{"<PlandexFinish/>", "<PlandexFinish />", "<PlandexFinish>"}
+		combined := processor.contentBuffer + content
+		for _, v := range finishVariants {
+			if strings.Contains(combined, v) {
+				split := strings.Split(combined, v)
+				if len(split) > 0 {
+					before := split[0]
+					return bufferOrStreamResult{shouldStream: before != "", content: before, shouldStop: true}
+				}
+				return bufferOrStreamResult{shouldStream: false, shouldStop: true}
+			}
+			// if combined ends with a prefix of v, buffer and continue
+			maxPrefix := len(v) - 1
+			if maxPrefix > len(combined) {
+				maxPrefix = len(combined)
+			}
+			if maxPrefix > 0 {
+				if strings.HasPrefix(v, combined[len(combined)-maxPrefix:]) {
+					processor.contentBuffer = combined
+					return bufferOrStreamResult{shouldStream: false, content: content}
+				}
+			}
+		}
+
+
 	if len(manualStopSequences) > 0 {
 		for _, stopSequence := range manualStopSequences {
 
@@ -223,6 +267,8 @@ func (processor *chunkProcessor) bufferOrStream(content string, parserRes *types
 			}
 
 		}
+
+
 	}
 
 	// apart from manual stop sequences, no buffering in planning stages
