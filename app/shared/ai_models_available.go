@@ -434,8 +434,8 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			PreferredOutputFormat: ModelOutputFormatXml,
 		},
 		Providers: []BaseModelUsesProvider{
-			{Provider: ModelProviderNanoGPT, ModelName: "glm-4.6"},
-			{Provider: ModelProviderNanoGPTSubscription, ModelName: "glm-4.6"},
+			{Provider: ModelProviderNanoGPT, ModelName: "z-ai/glm-4.6"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "z-ai/glm-4.6"},
 		},
 	},
 	{
@@ -449,8 +449,8 @@ var BuiltInModels = []*BaseModelConfigSchema{
 			IncludeReasoning:      true,
 		},
 		Providers: []BaseModelUsesProvider{
-			{Provider: ModelProviderNanoGPT, ModelName: "glm-4.6:thinking"},
-			{Provider: ModelProviderNanoGPTSubscription, ModelName: "glm-4.6:thinking"},
+			{Provider: ModelProviderNanoGPT, ModelName: "z-ai/glm-4.6:thinking"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "z-ai/glm-4.6:thinking"},
 		},
 	},
 

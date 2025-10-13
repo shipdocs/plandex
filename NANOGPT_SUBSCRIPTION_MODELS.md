@@ -38,16 +38,7 @@ Your NanoGPT subscription includes **open-source and smaller models only**. Prem
   - `deepseek-ai/DeepSeek-V3.1:thinking`
   - Listed in subscription endpoint (not tested)
 
-### Zhipu AI
-- **GLM-4.6** (`glm-4.6`)
-  - Advanced agentic, reasoning and coding capabilities
-  - Superior coding performance (benchmarks show it outperforms Claude 4.5 Sonnet)
-  - **CONFIRMED WORKING** (200 response, cost: 0)
-  - **NOTE**: Not yet integrated into Plandex model definitions
 
-- **GLM-4.6 Thinking** (`glm-4.6:thinking`)
-  - Reasoning variant
-  - Listed in subscription endpoint
 
 ## ❌ Models NOT Available (402 Errors)
 
@@ -66,6 +57,15 @@ Your NanoGPT subscription includes **open-source and smaller models only**. Prem
 - **Gemini models**
   - Not listed in subscription endpoint
   - Likely not available
+
+### Zhipu AI
+- **GLM-4.6** (`glm-4.6`)
+  - Returns 402 "Insufficient balance"
+  - Listed in subscription endpoint but not actually available
+
+- **GLM-4.6 Thinking** (`glm-4.6:thinking`)
+  - Returns 402 "Insufficient balance"
+  - Listed in subscription endpoint but not actually available
 
 ## Optimal Model Pack Configuration
 
@@ -109,11 +109,10 @@ Based on available models and their capabilities:
 }
 ```
 
-**Why GLM-4.6 for advanced tasks:**
-- Superior coding performance (benchmarks show it outperforms Claude 4.5 Sonnet)
-- Advanced agentic capabilities
-- Strong reasoning abilities
-- Available on your subscription at no cost
+**Why DeepSeek for advanced tasks:**
+- DeepSeek R1 has strong reasoning capabilities
+- DeepSeek V3 is fast and capable for coding
+- Both confirmed working on your subscription at no cost
 
 ## Testing Results
 

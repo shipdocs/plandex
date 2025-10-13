@@ -335,6 +335,8 @@ func createChatCompletionStreamExtended(
 	baseUrl := baseModelConfig.BaseUrl
 	url := baseUrl + "/chat/completions"
 
+	log.Printf("DEBUG: Making API request to URL: %s (provider: %s)", url, baseModelConfig.Provider)
+
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(jsonBody))
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
