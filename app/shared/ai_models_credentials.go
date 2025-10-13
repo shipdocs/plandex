@@ -76,6 +76,7 @@ func (m ModelRoleConfig) GetModelProviderOptions(settings *PlanSettings) ModelPr
 			publishers[ModelPublisherPerplexity] = true
 			publishers[ModelPublisherQwen] = true
 			publishers[ModelPublisherMistral] = true
+			publishers[ModelPublisherZhipu] = true
 		}
 
 		opts[composite] = ModelProviderOption{

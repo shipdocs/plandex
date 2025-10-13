@@ -1,0 +1,13 @@
+{
+  "$schema": "https://plandex.ai/schemas/model-pack-inline.schema.json",
+  "planner": "zhipu/glm-4.6",
+  "architect": "zhipu/glm-4.6",
+  "coder": "zhipu/glm-4.6",
+  "summarizer": "anthropic/claude-3.5-haiku",
+  "builder": "zhipu/glm-4.6-thinking",
+  "wholeFileBuilder": "zhipu/glm-4.6-thinking",
+  "names": "openai/gpt-4.1-mini",
+  "commitMessages": "openai/gpt-4.1-mini",
+  "autoContinue": "anthropic/claude-3.5-haiku"
+}
+

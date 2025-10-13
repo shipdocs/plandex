@@ -222,9 +222,10 @@ func execTellPlan(params execTellPlanParams) {
 		})
 	} else if state.currentStage.TellStage == shared.TellStagePlanning {
 		// add the shared context between planning and context phases first so it can be cached
-		// this is just for the map and any manually loaded contexts - auto contexts will be added later
+		// for chat-only requests, do NOT include the heavy project map to keep the request small/cost-effective
+		// auto contexts will be added later if enabled
 		planStageSharedMsgs = state.formatModelContext(formatModelContextParams{
-			includeMaps:         true,
+			includeMaps:         !req.IsChatOnly,
 			smartContextEnabled: req.SmartContext,
 			includeApplyScript:  req.ExecEnabled,
 			baseOnly:            true,

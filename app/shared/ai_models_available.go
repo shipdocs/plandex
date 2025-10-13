@@ -425,6 +425,36 @@ var BuiltInModels = []*BaseModelConfigSchema{
 	},
 
 	{
+		ModelTag:    "zhipu/glm-4.6",
+		Publisher:   ModelPublisherZhipu,
+		Description: "GLM-4.6 - Advanced agentic, reasoning and coding capabilities",
+		BaseModelShared: BaseModelShared{
+			DefaultMaxConvoTokens: 15000, MaxTokens: 200000,
+			MaxOutputTokens: 8192, ReservedOutputTokens: 8192,
+			PreferredOutputFormat: ModelOutputFormatXml,
+		},
+		Providers: []BaseModelUsesProvider{
+			{Provider: ModelProviderNanoGPT, ModelName: "glm-4.6"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "glm-4.6"},
+		},
+	},
+	{
+		ModelTag:    "zhipu/glm-4.6-thinking",
+		Publisher:   ModelPublisherZhipu,
+		Description: "GLM-4.6 Thinking - Reasoning version with strong general performance",
+		BaseModelShared: BaseModelShared{
+			DefaultMaxConvoTokens: 15000, MaxTokens: 200000,
+			MaxOutputTokens: 8192, ReservedOutputTokens: 8192,
+			PreferredOutputFormat: ModelOutputFormatXml,
+			IncludeReasoning:      true,
+		},
+		Providers: []BaseModelUsesProvider{
+			{Provider: ModelProviderNanoGPT, ModelName: "glm-4.6:thinking"},
+			{Provider: ModelProviderNanoGPTSubscription, ModelName: "glm-4.6:thinking"},
+		},
+	},
+
+	{
 		ModelTag:    "qwen/qwen-2.5-coder-32b-instruct",
 		Publisher:   ModelPublisherQwen,
 		Description: "Qwen 2.5 Coder 32B (Instruct)",

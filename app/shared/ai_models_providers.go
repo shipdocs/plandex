@@ -35,6 +35,7 @@ const (
 	ModelPublisherPerplexity ModelPublisher = "Perplexity"
 	ModelPublisherQwen       ModelPublisher = "Qwen"
 	ModelPublisherMistral    ModelPublisher = "Mistral"
+	ModelPublisherZhipu      ModelPublisher = "Zhipu"
 )
 
 type ModelProvider string

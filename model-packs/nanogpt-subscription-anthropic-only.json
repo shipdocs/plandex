@@ -1,0 +1,13 @@
+{
+  "$schema": "https://plandex.ai/schemas/model-pack-inline.schema.json",
+  "planner": "anthropic/claude-sonnet-4-thinking-hidden",
+  "architect": "anthropic/claude-sonnet-4-thinking-hidden",
+  "coder": "anthropic/claude-sonnet-4-thinking-hidden",
+  "summarizer": "anthropic/claude-3.5-haiku",
+  "builder": "anthropic/claude-sonnet-4",
+  "wholeFileBuilder": "anthropic/claude-sonnet-4",
+  "names": "anthropic/claude-3.5-haiku",
+  "commitMessages": "anthropic/claude-3.5-haiku",
+  "autoContinue": "anthropic/claude-3.5-haiku"
+}
+

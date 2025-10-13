@@ -1,0 +1,13 @@
+{
+  "$schema": "https://plandex.ai/schemas/model-pack-inline.schema.json",
+  "planner": "anthropic/claude-3.5-haiku",
+  "architect": "anthropic/claude-3.5-haiku",
+  "coder": "anthropic/claude-3.5-haiku",
+  "summarizer": "anthropic/claude-3.5-haiku",
+  "builder": "anthropic/claude-3.5-haiku",
+  "wholeFileBuilder": "anthropic/claude-3.5-haiku",
+  "names": "anthropic/claude-3.5-haiku",
+  "commitMessages": "anthropic/claude-3.5-haiku",
+  "autoContinue": "anthropic/claude-3.5-haiku"
+}
+
